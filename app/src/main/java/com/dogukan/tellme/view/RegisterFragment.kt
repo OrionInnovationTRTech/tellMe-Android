@@ -1,0 +1,178 @@
+package com.dogukan.tellme.view
+
+import android.content.ContentResolver
+import android.content.Intent
+import android.graphics.drawable.BitmapDrawable
+import android.net.Uri
+import android.os.Bundle
+import android.provider.MediaStore
+import android.util.Log
+import androidx.fragment.app.Fragment
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.Toast
+import androidx.activity.result.ActivityResultCallback
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.browser.customtabs.CustomTabsClient.getPackageName
+import androidx.navigation.Navigation
+import com.dogukan.tellme.R
+
+import com.dogukan.tellme.databinding.FragmentRegisterBinding
+import com.dogukan.tellme.models.Users
+import com.dogukan.tellme.util.AppUtil
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.messaging.FirebaseMessaging
+import com.google.firebase.storage.FirebaseStorage
+import java.util.*
+
+
+class RegisterFragment : Fragment() {
+
+    private lateinit var binding: FragmentRegisterBinding
+    private val appUtil = AppUtil()
+    var selectedPhotoUri : Uri?=null
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        // Inflate the layout for this fragment
+
+        binding = FragmentRegisterBinding.inflate(layoutInflater)
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        binding.alreadyAccountTV.setOnClickListener {
+            val action = RegisterFragmentDirections.actionRegisterFragmentToLoginFragment()
+            Navigation.findNavController(it).navigate(action)
+        }
+        init()
+    }
+
+    private fun init(){
+        binding.registerbtn.setOnClickListener {
+
+            performRegister()
+        }
+
+        val getImage = registerForActivityResult(
+            ActivityResultContracts.GetContent(),
+            ActivityResultCallback {
+                val bitmap = MediaStore.Images.Media.getBitmap(context?.contentResolver,it)
+                val bitmapDrawable = BitmapDrawable(bitmap)
+                binding.registerCircleImageView.setImageDrawable(bitmapDrawable)
+
+                selectedPhotoUri = it
+                binding.selectPhotobtn.setImageDrawable(null)
+            }
+        )
+        binding.selectPhotobtn.setOnClickListener {
+            getImage.launch("image/*")
+        }
+
+
+    }
+
+    override fun onStart() {
+        super.onStart()
+        if (FirebaseAuth.getInstance().currentUser!=null){
+            FirebaseMessaging.getInstance().token.addOnSuccessListener {
+                val token = it
+                val databaseReference =
+                    FirebaseDatabase.getInstance().getReference("users")
+                        .child(appUtil.getUID()!!)
+                val map: MutableMap<String, Any> = HashMap()
+                map["token"] = token
+                databaseReference.updateChildren(map)
+            }
+            goToLatestMessageFragment()
+        }
+    }
+    private fun performRegister(){
+        val email = binding.RegisterEmailET.text.toString()
+        val password = binding.RegisterPasswordET.text.toString()
+        val username = binding.RegisterUserNameET.text.toString()
+        if(username.isEmpty()){
+            binding.RegisterUserNameET.setError("Please enter your username")
+            return
+        }
+        if(email.isEmpty()){
+            binding.RegisterEmailET.setError("Please enter your email")
+            return
+        }
+        if(password.isEmpty()){
+            binding.RegisterPasswordET.setError("Please enter your password")
+            return
+        }
+        FirebaseAuth.getInstance().createUserWithEmailAndPassword(email,password)
+            .addOnCompleteListener {
+                if (!it.isSuccessful){
+                    return@addOnCompleteListener
+                }
+
+                Toast.makeText(context, "Registration Successful", Toast.LENGTH_LONG).show()
+                Log.d("RegisterActivity", "Created user with uid:${it.result.user?.uid}")
+                uploudImageToFirebaseStorage()
+
+            }
+            .addOnFailureListener {
+                Toast.makeText(context, "this email already exists", Toast.LENGTH_LONG).show()
+            }
+    }
+    private fun goToLatestMessageFragment(){
+        val action = RegisterFragmentDirections.actionRegisterFragmentToLatestMessagesFragment2()
+        view?.let { it1 -> Navigation.findNavController(it1).navigate(action) }
+    }
+    private fun uploudImageToFirebaseStorage(){
+
+        val filename = UUID.randomUUID().toString()
+        val ref = FirebaseStorage.getInstance().getReference("/images/$filename")
+        if (selectedPhotoUri==null){
+            val uri = Uri.parse("android.resource://com.dogukan.tellme/drawable/images");
+            val inputStream = context?.contentResolver?.openInputStream(uri)
+            Log.d("draven","Girdi")
+            ref.putStream(inputStream!!)
+                .addOnSuccessListener {
+                    ref.downloadUrl.addOnSuccessListener {
+                        Log.d("draven","Girdi3")
+                        saveUserToFirebaseDatabase(it.toString())
+                    }
+                }
+        }else{
+            ref.putFile(selectedPhotoUri!!)
+            .addOnSuccessListener {
+                ref.downloadUrl.addOnSuccessListener {
+                    saveUserToFirebaseDatabase(it.toString())
+                    Log.d("RegisterActivityy", "Successfully uploaded image : $it")
+                }
+            }
+            .addOnFailureListener {
+                Log.d("RegisterActivityy", "Successfully uploaded image : ${it.message}")
+            }
+        }
+
+
+    }
+    private fun saveUserToFirebaseDatabase(profileImageURL: String){
+        val uid = FirebaseAuth.getInstance().uid ?: ""
+        val email =  FirebaseAuth.getInstance().currentUser?.email
+        Log.d("Email",email.toString())
+        Log.d("draven","Girdi2")
+        val status = "Welcome Tellme"
+        val ref = FirebaseDatabase.getInstance().getReference("/users/$uid")
+        val user = Users(uid, binding.RegisterUserNameET.text.toString(), profileImageURL,status,
+            email.toString(),"Online"
+        )
+        ref.setValue(user)
+            .addOnSuccessListener {
+                goToLatestMessageFragment()
+            }
+    }
+
+}

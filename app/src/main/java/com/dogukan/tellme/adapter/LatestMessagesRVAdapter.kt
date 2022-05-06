@@ -1,0 +1,104 @@
+package com.dogukan.tellme.adapter
+
+import android.annotation.SuppressLint
+import android.util.Log
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.ProgressBar
+import android.widget.TextView
+import androidx.navigation.Navigation
+import androidx.recyclerview.widget.RecyclerView
+import com.dogukan.tellme.R
+import com.dogukan.tellme.models.ChatMessage
+import com.dogukan.tellme.models.Users
+import com.dogukan.tellme.repository.LatestRepository
+import com.dogukan.tellme.repository.LatestRepositoryI
+import com.dogukan.tellme.util.Addition
+import com.dogukan.tellme.view.LatestMessagesFragmentDirections
+import com.dogukan.tellme.view.NewMessagesFragmentDirections
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
+import de.hdodenhof.circleimageview.CircleImageView
+
+class LatestMessagesRVAdapter (private val chatMessage:ArrayList<ChatMessage> ,private val userList : ArrayList<Users>) : RecyclerView.Adapter<LatestMessagesRVAdapter.LatestMessagesViewHolder>(){
+
+
+    private var addition = Addition()
+
+    class LatestMessagesViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
+        var itemImage : CircleImageView = itemView.findViewById(R.id.latest_imageView)
+        var itemUserName : TextView = itemView.findViewById(R.id.latest_username_TV)
+        var itemLastestMessage : TextView = itemView.findViewById(R.id.latest_message_TV)
+        var itemLastestMessageTimeStamp : TextView = itemView.findViewById(R.id.latest_messages_time_stampTV)
+        var itemProgressBar : ProgressBar = itemView.findViewById(R.id.latest_progressBar)
+    }
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LatestMessagesViewHolder {
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.latest_message_row,parent,false)
+        return LatestMessagesViewHolder(view)
+    }
+    override fun onBindViewHolder(holder: LatestMessagesViewHolder, @SuppressLint("RecyclerView") position: Int) {
+
+        holder.itemProgressBar.visibility = View.VISIBLE
+        holder.itemLastestMessageTimeStamp.text = chatMessage[position].TimeStamp
+        holder.itemLastestMessage.text = chatMessage[position].text
+        val chatPartnerID : String
+
+        if (chatMessage[position].fromID == FirebaseAuth.getInstance().uid){
+            chatPartnerID = chatMessage[position].ToID
+        }
+        else
+        {
+            chatPartnerID = chatMessage[position].fromID
+        }
+
+        val ref = FirebaseDatabase.getInstance().getReference("/users/$chatPartnerID")
+        ref.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val user = snapshot.getValue(Users::class.java)
+                user?.let {
+
+                    userList.add(it)
+                    holder.itemUserName.text = userList[position].username
+                    addition.picassoUseIt(userList[position].profileImageURL,holder.itemImage,holder.itemProgressBar)
+
+                }
+
+                Log.d("Latest","Girdi2")
+            }
+            override fun onCancelled(error: DatabaseError) {
+
+            }
+
+        })
+
+
+
+        holder.itemView.setOnClickListener {
+
+            val action = LatestMessagesFragmentDirections.actionLatestMessagesFragment2ToChatLogFragment(position,
+                userList[position].uid,
+                userList[position].username,
+                userList[position].profileImageURL)
+            Navigation.findNavController(it).navigate(action)
+        }
+    }
+
+
+    override fun getItemCount(): Int {
+        return chatMessage.size
+    }
+    @SuppressLint("NotifyDataSetChanged")
+    fun latestMessagesUpdate(latesMessageList : List<ChatMessage>){
+        chatMessage.clear()
+        chatMessage.addAll(latesMessageList)
+        notifyDataSetChanged()
+    }
+
+
+
+
+}
