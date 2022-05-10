@@ -1,5 +1,6 @@
 package com.dogukan.tellme.viewmodel
 
+import android.net.Uri
 import android.widget.ProgressBar
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
@@ -12,4 +13,14 @@ class SettingsViewModel : ViewModel() {
     fun getUser() : LiveData<Users>{
         return userInfoRepository.getUser()
     }
+    fun changePhoto(selectedPhotoUri : Uri){
+        userInfoRepository.changePhoto(selectedPhotoUri)
+    }
+    fun changeUserName(userName : String){
+        userInfoRepository.updateUserName(userName)
+    }
+    fun changeStatus(Status : String){
+        userInfoRepository.updateStatus(Status)
+    }
+
 }

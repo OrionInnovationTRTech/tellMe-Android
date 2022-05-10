@@ -40,41 +40,17 @@ class LatestMessagesRVAdapter (private val chatMessage:ArrayList<ChatMessage> ,p
         val view = LayoutInflater.from(parent.context).inflate(R.layout.latest_message_row,parent,false)
         return LatestMessagesViewHolder(view)
     }
-    override fun onBindViewHolder(holder: LatestMessagesViewHolder, @SuppressLint("RecyclerView") position: Int) {
+    override fun onBindViewHolder(holder: LatestMessagesViewHolder, position: Int) {
 
         holder.itemProgressBar.visibility = View.VISIBLE
         holder.itemLastestMessageTimeStamp.text = chatMessage[position].TimeStamp
         holder.itemLastestMessage.text = chatMessage[position].text
         val chatPartnerID : String
 
-        if (chatMessage[position].fromID == FirebaseAuth.getInstance().uid){
-            chatPartnerID = chatMessage[position].ToID
+        if (userList.size != 0 && userList.size != position){
+            holder.itemUserName.text = userList[position].username
+            addition.picassoUseIt(userList[position].profileImageURL,holder.itemImage,holder.itemProgressBar)
         }
-        else
-        {
-            chatPartnerID = chatMessage[position].fromID
-        }
-
-        val ref = FirebaseDatabase.getInstance().getReference("/users/$chatPartnerID")
-        ref.addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                val user = snapshot.getValue(Users::class.java)
-                user?.let {
-
-                    userList.add(it)
-                    holder.itemUserName.text = userList[position].username
-                    addition.picassoUseIt(userList[position].profileImageURL,holder.itemImage,holder.itemProgressBar)
-
-                }
-
-                Log.d("Latest","Girdi2")
-            }
-            override fun onCancelled(error: DatabaseError) {
-
-            }
-
-        })
-
 
 
         holder.itemView.setOnClickListener {
@@ -95,6 +71,13 @@ class LatestMessagesRVAdapter (private val chatMessage:ArrayList<ChatMessage> ,p
     fun latestMessagesUpdate(latesMessageList : List<ChatMessage>){
         chatMessage.clear()
         chatMessage.addAll(latesMessageList)
+        notifyDataSetChanged()
+    }
+    @SuppressLint("NotifyDataSetChanged")
+    fun latestUserUpdate(userList: List<Users>){
+        this.userList.clear()
+
+        this.userList.addAll(userList)
         notifyDataSetChanged()
     }
 

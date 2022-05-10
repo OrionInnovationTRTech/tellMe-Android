@@ -4,6 +4,7 @@ import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import android.opengl.Visibility
 import android.os.Bundle
+import android.os.Debug
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.MenuItem
@@ -72,6 +73,7 @@ class ChatLogFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
 
         (activity as AppCompatActivity).supportActionBar?.hide()
+
         super.onCreate(savedInstanceState)
     }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -118,13 +120,10 @@ class ChatLogFragment : Fragment() {
             }
             viewModel.getActiveStateFirebase(ToID)
             viewModel.getActiveState()
-
-
         }
-
         myID = AppUtil.getUID()!!
-
         viewModel.getAllMessage()
+        viewModel.checkIsSeen(ToID)
         binding.recyclerView2.adapter = adapter
 
         observeLiveData()
@@ -155,6 +154,18 @@ class ChatLogFragment : Fragment() {
                 addition.picassoUseIt(hisImage,binding.include.profileImage)
                 binding.include.username.text = myName
             }
+        })
+        viewModel.isSeen.observe(viewLifecycleOwner, Observer {
+
+
+            if (it){
+                Log.d("IsSeen",it.toString())
+
+            }
+            else{
+                Log.d("IsSeen",it.toString())
+            }
+
         })
     }
 

@@ -12,7 +12,7 @@ import kotlinx.android.parcel.Parcelize
 
 
 @Parcelize
-class Users(val uid : String , var username:String,var profileImageURL:String, var status : String, var Email : String, var activeState : String) : Parcelable{
+class Users(var uid : String , var username:String,var profileImageURL:String, var status : String, var Email : String, var activeState : String) : Parcelable{
     constructor() : this("","","","","","offline")
 
 

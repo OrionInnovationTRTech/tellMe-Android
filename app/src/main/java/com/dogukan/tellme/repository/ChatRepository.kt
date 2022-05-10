@@ -13,19 +13,24 @@ class ChatRepository(ChatRepositoryI: ChatRepositoryI) {
     private var chatRepositoryI : ChatRepositoryI ?= ChatRepositoryI
     private var chatMessageList = ArrayList<ChatMessage>()
     private  var AppUtil = AppUtil()
+    private lateinit var valueEventListener : ValueEventListener
 
      fun listenForMessage(toID : String){
-
-        val fromID = FirebaseAuth.getInstance().uid
         val ref = FirebaseDatabase.getInstance().getReference("/user-messages/${AppUtil.getUID()}/$toID")
         ref.addChildEventListener(object : ChildEventListener {
             override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
                 val chatMessage = snapshot.getValue(ChatMessage::class.java)
+                Log.d("ListenForMessage",chatMessage?.ToID.toString() +" ToId")
+                Log.d("ListenForMessage",chatMessage?.fromID.toString()+" From")
+                if (chatMessage?.ToID.equals(AppUtil.getUID())){
+                    snapshot.ref.child("seen").setValue(true)
+                }
 
                 if (chatMessage != null) {
                     chatMessageList.add(chatMessage)
                     chatRepositoryI?.showListOfMessage(chatMessageList)
                 }
+
             }
             override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
             }
@@ -39,6 +44,65 @@ class ChatRepository(ChatRepositoryI: ChatRepositoryI) {
 
             }
         })
+        seenMessage(toID)
+    }
+
+    fun seenMessage(toID : String){
+        val ref = FirebaseDatabase.getInstance().getReference("/user-messages/").child(AppUtil.getUID()!!).child(toID)
+        val toref = FirebaseDatabase.getInstance().getReference("/user-messages/").child(toID).child(AppUtil.getUID()!!)
+
+        toref.addChildEventListener(object : ChildEventListener {
+            override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
+                val chatMessage = snapshot.getValue(ChatMessage::class.java)
+
+                snapshot.ref.child("seen").setValue(true)
+                chatRepositoryI?.checkIsSeen(true)
+
+                /*if (chatMessage != null) {
+                    chatMessageList.add(chatMessage)
+                    chatRepositoryI?.showListOfMessage(chatMessageList)
+
+                }*/
+
+            }
+            override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
+            }
+            override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {
+
+            }
+            override fun onChildRemoved(snapshot: DataSnapshot) {
+
+            }
+            override fun onCancelled(error: DatabaseError) {
+
+            }
+        })
+        ref.addChildEventListener(object : ChildEventListener {
+            override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
+                val chatMessage = snapshot.getValue(ChatMessage::class.java)
+                snapshot.ref.child("seen").setValue(true)
+                chatRepositoryI?.checkIsSeen(true)
+
+                /*if (chatMessage != null) {
+                    chatMessageList.add(chatMessage)
+                    chatRepositoryI?.showListOfMessage(chatMessageList)
+                    chatRepositoryI?.checkIsSeen(chatMessageList)
+                }*/
+
+            }
+            override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
+            }
+            override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {
+
+            }
+            override fun onChildRemoved(snapshot: DataSnapshot) {
+
+            }
+            override fun onCancelled(error: DatabaseError) {
+
+            }
+        })
+
     }
      fun getActiveState(toID: String){
         val databaseref = FirebaseDatabase.getInstance().getReference("users").child(toID)
@@ -65,13 +129,14 @@ class ChatRepository(ChatRepositoryI: ChatRepositoryI) {
             return
         }
         val c = Calendar.getInstance()
+         Log.d("Calendar",c.timeInMillis.toString())
         val hour = c.get(Calendar.HOUR_OF_DAY)
         val minute = c.get(Calendar.MINUTE)
          var timeStamp = ""
 
          timeStamp = String.format("%02d:%02d",hour,minute)
 
-        val chatMessage = ChatMessage(Ref.key!!, text.toString(), fromID.toString(), toID.toString(), timeStamp)
+        val chatMessage = ChatMessage(Ref.key!!, text.toString(), fromID.toString(), toID.toString(), timeStamp,false)
         Ref.setValue(chatMessage)
             .addOnSuccessListener {
                 binding.sendmassegeTV.text.clear()
@@ -85,5 +150,6 @@ class ChatRepository(ChatRepositoryI: ChatRepositoryI) {
          Log.d("user-messages",timeStamp)
 
     }
+
 
 }

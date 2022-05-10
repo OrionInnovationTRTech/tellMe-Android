@@ -1,33 +1,28 @@
 package com.dogukan.tellme.view
 
-import android.content.ContentResolver
-import android.content.Intent
 import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.ActivityResultCallback
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.browser.customtabs.CustomTabsClient.getPackageName
+import androidx.fragment.app.Fragment
 import androidx.navigation.Navigation
-import com.dogukan.tellme.R
-
 import com.dogukan.tellme.databinding.FragmentRegisterBinding
 import com.dogukan.tellme.models.Users
 import com.dogukan.tellme.util.AppUtil
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.ktx.Firebase
 import com.google.firebase.messaging.FirebaseMessaging
 import com.google.firebase.storage.FirebaseStorage
 import java.util.*
+import java.util.regex.Matcher
+import java.util.regex.Pattern
 
 
 class RegisterFragment : Fragment() {
@@ -95,16 +90,23 @@ class RegisterFragment : Fragment() {
         }
     }
     private fun performRegister(){
-        val email = binding.RegisterEmailET.text.toString()
-        val password = binding.RegisterPasswordET.text.toString()
+        val email = binding.RegisterEmailET.text.toString().trim()
+        val password = binding.RegisterPasswordET.text.toString().trim()
         val username = binding.RegisterUserNameET.text.toString()
         if(username.isEmpty()){
             binding.RegisterUserNameET.setError("Please enter your username")
             return
         }
+        if (!isEmailValid(email)){
+            binding.RegisterEmailET.setError("Please enter a valid email address")
+            return
+        }
         if(email.isEmpty()){
             binding.RegisterEmailET.setError("Please enter your email")
             return
+        }
+        if (email.isBlank()){
+            binding.RegisterEmailET.setError("no spaces can be left")
         }
         if(password.isEmpty()){
             binding.RegisterPasswordET.setError("Please enter your password")
@@ -124,6 +126,12 @@ class RegisterFragment : Fragment() {
             .addOnFailureListener {
                 Toast.makeText(context, "this email already exists", Toast.LENGTH_LONG).show()
             }
+    }
+    fun isEmailValid(email: String?): Boolean {
+        val expression = "^[\\w\\.-]+@([\\w\\-]+\\.)+[A-Z]{2,4}$"
+        val pattern: Pattern = Pattern.compile(expression, Pattern.CASE_INSENSITIVE)
+        val matcher: Matcher = pattern.matcher(email)
+        return matcher.matches()
     }
     private fun goToLatestMessageFragment(){
         val action = RegisterFragmentDirections.actionRegisterFragmentToLatestMessagesFragment2()
@@ -162,8 +170,6 @@ class RegisterFragment : Fragment() {
     private fun saveUserToFirebaseDatabase(profileImageURL: String){
         val uid = FirebaseAuth.getInstance().uid ?: ""
         val email =  FirebaseAuth.getInstance().currentUser?.email
-        Log.d("Email",email.toString())
-        Log.d("draven","Girdi2")
         val status = "Welcome Tellme"
         val ref = FirebaseDatabase.getInstance().getReference("/users/$uid")
         val user = Users(uid, binding.RegisterUserNameET.text.toString(), profileImageURL,status,

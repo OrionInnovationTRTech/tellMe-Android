@@ -110,5 +110,16 @@
         <action
             android:id="@+id/action_settingsFragment_to_latestMessagesFragment2"
             app:destination="@id/latestMessagesFragment2" />
+        <action
+            android:id="@+id/action_settingsFragment_to_editSettingsFragment"
+            app:destination="@id/editSettingsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/editSettingsFragment"
+        android:name="com.dogukan.tellme.EditSettingsFragment"
+        android:label="EditSettingsFragment" >
+        <action
+            android:id="@+id/action_editSettingsFragment_to_settingsFragment"
+            app:destination="@id/settingsFragment" />
     </fragment>
 </navigation>

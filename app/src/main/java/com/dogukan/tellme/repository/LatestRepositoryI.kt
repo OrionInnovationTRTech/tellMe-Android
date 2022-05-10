@@ -6,6 +6,7 @@ import java.lang.reflect.GenericArrayType
 
 interface LatestRepositoryI {
     fun showLatestMessage(message : ArrayList<ChatMessage>)
+    fun showUserInfoLatestMessage(user : ArrayList<Users>)
     fun getLastUserInfo(userList : ArrayList<Users>)
 
 }

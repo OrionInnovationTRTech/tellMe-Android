@@ -13,6 +13,7 @@ class ChatViewModel() : ViewModel(), ChatRepositoryI {
     private var chatRepository = ChatRepository(this)
     val message = MutableLiveData<List<ChatMessage>>()
     val activeState = MutableLiveData<Boolean>()
+    val isSeen = MutableLiveData<Boolean>()
 
 
     fun getActiveState() : LiveData<Boolean>{
@@ -27,9 +28,17 @@ class ChatViewModel() : ViewModel(), ChatRepositoryI {
 
     fun getMessageFirebase(ToID : String){
         chatRepository.listenForMessage(ToID)
+
+    }
+    fun getIsSeenStatus() : LiveData<Boolean>{
+        return isSeen
     }
     fun performSendMessage(text : String, toID: String, binding: FragmentChatLogBinding){
         chatRepository.performSendMessage(text,toID,binding)
+    }
+
+    fun checkIsSeen(toID: String){
+        chatRepository.seenMessage(toID)
     }
     override fun showListOfMessage(messageList: ArrayList<ChatMessage>) {
 
@@ -40,6 +49,11 @@ class ChatViewModel() : ViewModel(), ChatRepositoryI {
         this.activeState.value = activeState.equals("online")
 
     }
+
+    override fun checkIsSeen(isSeen: Boolean) {
+        this.isSeen.value = isSeen
+    }
+
 
     override fun sendMessage() {
 

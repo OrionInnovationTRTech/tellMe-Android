@@ -24,10 +24,12 @@ class ChatLogRVAdapter(private val chatmessages : ArrayList<ChatMessage> ) : Rec
     class SenderViewHolder(itemView : View) : RecyclerView.ViewHolder(itemView){
         var sendermessage: TextView = itemView.findViewById(R.id.chat_to_row_TV)
         var senderTimeStamp = itemView.findViewById<TextView>(R.id.Time_stamp_chat_to_row_TV)
+        var senderIsSeen = itemView.findViewById<TextView>(R.id.seenMessage_to_TV)
     }
     class RecieverViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
         var recievermessage: TextView = itemView.findViewById(R.id.chat_from_TV)
         var recieverTimeStamp = itemView.findViewById<TextView>(R.id.Time_stamp_chat_from_row_TV)
+        var reciverIsSeen = itemView.findViewById<TextView>(R.id.seenMessage_from_TV)
     }
 
 
@@ -52,12 +54,28 @@ class ChatLogRVAdapter(private val chatmessages : ArrayList<ChatMessage> ) : Rec
 
         if (holder.itemViewType == SENDER_VIEW_TYPE) {
             (holder as SenderViewHolder).sendermessage.text = chatmessages[position].text
-            Log.d("timestamp",chatmessages[position].TimeStamp)
+
             holder.senderTimeStamp.text = chatmessages[position].TimeStamp
+            if (position == chatmessages.size-1){
+                holder.senderIsSeen.visibility = View.VISIBLE
+
+                if (chatmessages[position].isSeen){
+
+                    holder.senderIsSeen.text = "seen"
+                }else{
+                    holder.senderIsSeen.text = "delivered"
+                }
+            }
+            else{
+                holder.senderIsSeen.visibility = View.GONE
+            }
+
+
         } else {
             (holder as RecieverViewHolder).recievermessage.text = chatmessages[position].text
             holder.recieverTimeStamp.text = chatmessages[position].TimeStamp
-            Log.d("timestamp",chatmessages[position].TimeStamp)
+
+
         }
     }
     override fun getItemCount(): Int {

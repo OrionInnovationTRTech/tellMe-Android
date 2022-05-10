@@ -49,10 +49,14 @@ class LatestMessagesFragment : Fragment() {
     private fun init(){
 
         binding.recyclerView3.layoutManager = LinearLayoutManager(context)
-        adapter = LatestMessagesRVAdapter(lastestChatMessageList,userList)
-
+        viewModel.getUserInfo()
         viewModel.listenForLatestMessages()
         viewModel.refreshRecyclerViewMessage()
+        viewModel.refreshRecyclerViewUserInLatestMessage()
+
+
+        adapter = LatestMessagesRVAdapter(lastestChatMessageList,userList)
+
         val activity = activity as? MainActivity
         activity?.supportActionBar?.title = "Tell Me"
         activity?.supportActionBar?.setDisplayHomeAsUpEnabled(false)
@@ -87,8 +91,19 @@ class LatestMessagesFragment : Fragment() {
     private fun observeLiveData(){
         viewModel.latestMessage.observe(viewLifecycleOwner, Observer {
             it?.let {
+                binding.loadingBar.visibility = View.GONE
+                binding.informationTV.text = ""
                 binding.recyclerView3.visibility = View.VISIBLE
                 adapter.latestMessagesUpdate(it)
+
+            }
+        })
+        viewModel.latestuser.observe(viewLifecycleOwner, Observer {
+            it?.let {
+                binding.loadingBar.visibility = View.GONE
+                binding.informationTV.text = ""
+                binding.recyclerView3.visibility = View.VISIBLE
+                adapter.latestUserUpdate(it)
 
             }
         })
