@@ -23,6 +23,9 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import de.hdodenhof.circleimageview.CircleImageView
+import java.text.SimpleDateFormat
+import java.util.*
+import kotlin.collections.ArrayList
 
 class LatestMessagesRVAdapter (private val chatMessage:ArrayList<ChatMessage> ,private val userList : ArrayList<Users>) : RecyclerView.Adapter<LatestMessagesRVAdapter.LatestMessagesViewHolder>(){
 
@@ -40,19 +43,19 @@ class LatestMessagesRVAdapter (private val chatMessage:ArrayList<ChatMessage> ,p
         val view = LayoutInflater.from(parent.context).inflate(R.layout.latest_message_row,parent,false)
         return LatestMessagesViewHolder(view)
     }
+    @SuppressLint("SimpleDateFormat")
     override fun onBindViewHolder(holder: LatestMessagesViewHolder, position: Int) {
-
-
-
-
-
         if (userList.size != 0 && userList.size == chatMessage.size){
             holder.itemUserName.text = userList[position].username
             addition.picassoUseIt(userList[position].profileImageURL,holder.itemImage,holder.itemProgressBar)
         }
 
         holder.itemProgressBar.visibility = View.VISIBLE
-        holder.itemLastestMessageTimeStamp.text = chatMessage[position].TimeStamp
+        val sdf = SimpleDateFormat("HH:mm")
+        val netDate = Date(chatMessage[position].TimeStamp)
+        val timestamp = sdf.format(netDate)
+
+        holder.itemLastestMessageTimeStamp.text = timestamp
         if (chatMessage[position].type=="TEXT"){
             holder.itemLastestMessage.text = chatMessage[position].text
         }else{

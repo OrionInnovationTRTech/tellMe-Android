@@ -19,6 +19,11 @@ import com.dogukan.tellme.models.Users
 import com.dogukan.tellme.util.Addition
 import com.dogukan.tellme.util.AppUtil
 import com.google.firebase.auth.FirebaseAuth
+import java.text.SimpleDateFormat
+import java.util.*
+import kotlin.collections.ArrayList
+import kotlin.time.Duration.Companion.hours
+import kotlin.time.Duration.Companion.minutes
 
 class ChatLogRVAdapter(private val chatmessages : ArrayList<ChatMessage> ,private val recyclerDetails: RecyclerDetails) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private var addition = Addition()
@@ -69,6 +74,7 @@ class ChatLogRVAdapter(private val chatmessages : ArrayList<ChatMessage> ,privat
             RECEIVER_VIEW_TYPE
         }
     }
+    @SuppressLint("SimpleDateFormat")
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
 
         if (holder.itemViewType == SENDER_VIEW_TYPE) {
@@ -78,7 +84,11 @@ class ChatLogRVAdapter(private val chatmessages : ArrayList<ChatMessage> ,privat
                     (holder as SenderViewHolder).senderLinearLayout.visibility = View.GONE
                     holder.senderConstraintLayout.visibility = View.VISIBLE
                     holder.sendermessage.text = chatmessages[position].text
-                    holder.senderTimeStamp.text = chatmessages[position].TimeStamp
+                    val sdf = SimpleDateFormat("HH:mm")
+                    val netDate = Date(chatmessages[position].TimeStamp)
+                    val timestamp = sdf.format(netDate)
+                    //val timeStamp: String = String.format("%02d:%02d",chatmessages[position].TimeStamp.time.hours,chatmessages[position].TimeStamp.time.minutes)
+                    holder.senderTimeStamp.text = timestamp
                     holder.sendermessage.setOnLongClickListener {
                         if (chatmessages[position].fromID.equals(appUtil.getUID())) {
                             Log.d("OnLong", "Selam")
@@ -101,7 +111,11 @@ class ChatLogRVAdapter(private val chatmessages : ArrayList<ChatMessage> ,privat
                     (holder as SenderViewHolder).senderLinearLayout.visibility = View.VISIBLE
                     holder.senderConstraintLayout.visibility = View.GONE
                     addition.picassoUseIt(chatmessages[position].text,holder.senderImage)
-                    holder.senderTimeStampImage.text = chatmessages[position].TimeStamp
+                    val sdf = SimpleDateFormat("HH:mm")
+                    val netDate = Date(chatmessages[position].TimeStamp)
+                    val timestamp = sdf.format(netDate)
+                   // val timeStamp: String = String.format("%02d:%02d",chatmessages[position].TimeStamp.time.hours,chatmessages[position].TimeStamp.time.minutes)
+                    holder.senderTimeStampImage.text = timestamp
                     holder.sendermessage.setOnLongClickListener {
                         if (chatmessages[position].fromID.equals(appUtil.getUID())) {
                             Log.d("OnLong", "Selam")
@@ -135,7 +149,11 @@ class ChatLogRVAdapter(private val chatmessages : ArrayList<ChatMessage> ,privat
                 (holder as RecieverViewHolder).recieverLinearLayout.visibility = View.GONE
                 holder.recieverConstraintLayout.visibility = View.VISIBLE
                 holder.recievermessage.text = chatmessages[position].text
-                holder.recieverTimeStamp.text = chatmessages[position].TimeStamp
+                val sdf = SimpleDateFormat("HH:mm")
+                val netDate = Date(chatmessages[position].TimeStamp)
+                val timestamp = sdf.format(netDate)
+               // val timeStamp: String = String.format("%02d:%02d",chatmessages[position].TimeStamp.time.hours,chatmessages[position].TimeStamp.time.minutes)
+                holder.recieverTimeStamp.text = timestamp
                 holder.recievermessage.setOnLongClickListener {
                     if (chatmessages[position].fromID.equals(appUtil.getUID())) {
                         Log.d("OnLong", "Selam")
@@ -156,7 +174,11 @@ class ChatLogRVAdapter(private val chatmessages : ArrayList<ChatMessage> ,privat
                 (holder as RecieverViewHolder).recieverLinearLayout.visibility = View.VISIBLE
                 holder.recieverConstraintLayout.visibility = View.GONE
                 addition.picassoUseIt(chatmessages[position].text,holder.recieverImage)
-                holder.recieverTimeStampImage.text = chatmessages[position].TimeStamp
+                val sdf = SimpleDateFormat("HH:mm")
+                val netDate = Date(chatmessages[position].TimeStamp)
+                val timestamp = sdf.format(netDate)
+                //val timeStamp: String = String.format("%02d:%02d",chatmessages[position].TimeStamp.time.hours,chatmessages[position].TimeStamp.time.minutes)
+                holder.recieverTimeStampImage.text = timestamp
                 holder.recievermessage.setOnLongClickListener {
                     if (chatmessages[position].fromID.equals(appUtil.getUID())) {
                         Log.d("OnLong", "Selam")

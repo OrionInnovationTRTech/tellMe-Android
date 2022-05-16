@@ -8,8 +8,12 @@ import com.dogukan.tellme.util.AppUtil
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import com.google.firebase.storage.FirebaseStorage
+import java.sql.Timestamp
 import java.util.*
 import kotlin.collections.ArrayList
+import kotlin.time.Duration.Companion.milliseconds
+import kotlin.time.Duration.Companion.minutes
+import kotlin.time.Duration.Companion.nanoseconds
 
 class ChatRepository(ChatRepositoryI: ChatRepositoryI) {
     private var chatRepositoryI : ChatRepositoryI ?= ChatRepositoryI
@@ -142,13 +146,16 @@ class ChatRepository(ChatRepositoryI: ChatRepositoryI) {
         if (fromID==null){
             return
         }
-        val c = Calendar.getInstance()
-        val hour = c.get(Calendar.HOUR_OF_DAY)
-        val minute = c.get(Calendar.MINUTE)
+         val c = System.currentTimeMillis();
+        // val d = c.time
+         //val b = c.get(Calendar.DATE.toLong().toInt())
+         //Log.d("Date",c.timeInMillis.nanoseconds.toString()+" ss "+d.toString())
+        //val hour = c.get(Calendar.HOUR_OF_DAY)
+        //val minute = c.get(Calendar.MINUTE)
 
-         val timeStamp: String = String.format("%02d:%02d",hour,minute)
+         //val timeStamp: String = String.format("%02d:%02d",hour,minute)
 
-        val chatMessage = ChatMessage(Ref.key!!, text.toString(), fromID.toString(), toID.toString(), timeStamp,false,"TEXT","no")
+        val chatMessage = ChatMessage(Ref.key!!, text.toString(), fromID.toString(), toID.toString(), c,false,"TEXT","no")
         Ref.setValue(chatMessage)
             .addOnSuccessListener {
                 binding.sendmassegeTV.text.clear()
@@ -181,14 +188,9 @@ class ChatRepository(ChatRepositoryI: ChatRepositoryI) {
         if (fromID==null){
             return
         }
-        val c = Calendar.getInstance()
-        Log.d("Calendar",c.timeInMillis.toString())
-        val hour = c.get(Calendar.HOUR_OF_DAY)
-        val minute = c.get(Calendar.MINUTE)
+        val c = System.currentTimeMillis();
 
-        val timeStamp: String = String.format("%02d:%02d",hour,minute)
-
-        val chatMessage = ChatMessage(Ref.key!!, imageUrl, fromID.toString(), toID, timeStamp,false,"IMAGE","no")
+        val chatMessage = ChatMessage(Ref.key!!, imageUrl, fromID.toString(), toID, c,false,"IMAGE","no")
         Ref.setValue(chatMessage)
             .addOnSuccessListener {
                 //chatRepositoryI?.sendImage(true)

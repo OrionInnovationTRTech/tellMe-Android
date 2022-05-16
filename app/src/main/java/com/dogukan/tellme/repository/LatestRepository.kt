@@ -20,13 +20,14 @@ class LatestRepository(latestRepositoryI: LatestRepositoryI) {
         val fromID = FirebaseAuth.getInstance().uid
 
         val ref = FirebaseDatabase.getInstance().getReference("/latest-messages/$fromID")
-        ref.orderByKey().addChildEventListener(object : ChildEventListener {
+        ref.orderByChild("timeStamp").addChildEventListener(object : ChildEventListener {
             override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
                 latestMessageList.clear()
 
                 val chatMessage = snapshot.getValue(ChatMessage::class.java)
                 if (chatMessage!=null){
                     latestMessagesMap[snapshot.key!!]=chatMessage
+                    latestMessagesMap.toSortedMap(reverseOrder())
                     //latestMessageList.add(chatMessage)
 
                     latestRepositoryI?.showLatestMessage(latestMessageList)
@@ -44,7 +45,6 @@ class LatestRepository(latestRepositoryI: LatestRepositoryI) {
                         val user = snapshot.getValue(Users::class.java)
                         if (user!=null) {
                             latestUserInfoListMap[snapshot.key!!] = user
-
                             latestUserInfoListMap.forEach{
                                 Log.d("ToIDDD",it.value.username)
                             }
@@ -68,6 +68,30 @@ class LatestRepository(latestRepositoryI: LatestRepositoryI) {
                     latestRepositoryI?.showLatestMessage(latestMessageList)
                     refreshRecyclerViewMessages()
                 }
+                val chatPartner : String? = if (chatMessage?.fromID == fromID){
+                    chatMessage?.ToID
+                }else {
+                    chatMessage?.fromID
+                }
+                val referance = FirebaseDatabase.getInstance().getReference("/users/$chatPartner")
+                referance.addValueEventListener(object : ValueEventListener {
+                    override fun onDataChange(snapshot: DataSnapshot) {
+                        val user = snapshot.getValue(Users::class.java)
+                        if (user!=null) {
+                            latestUserInfoListMap[snapshot.key!!] = user
+                            latestUserInfoListMap.forEach{
+                                Log.d("ToIDDD",it.value.username)
+                            }
+                            latestRepositoryI?.showUserInfoLatestMessage(latestUserInfoList)
+                            refreshRecyclerViewMessagesInUser()
+                        }
+                    }
+
+                    override fun onCancelled(error: DatabaseError) {
+                        TODO("Not yet implemented")
+                    }
+
+                })
             }
             override fun onChildRemoved(snapshot: DataSnapshot) {
                 //refreshRecyclerViewMessages()
