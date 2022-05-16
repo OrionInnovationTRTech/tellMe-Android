@@ -71,6 +71,7 @@ class LatestMessagesFragment : Fragment() {
             swipeRefleshLayout.isRefreshing=false
 
         }
+        binding.bottomNavigation.selectedItemId = R.id.chat;
         binding.bottomNavigation.setOnItemSelectedListener {
             when(it.itemId){
                 R.id.chat ->{
@@ -78,6 +79,7 @@ class LatestMessagesFragment : Fragment() {
                 }
                 R.id.settings ->{
                     val action = LatestMessagesFragmentDirections.actionLatestMessagesFragment2ToSettingsFragment()
+
                     view?.let { it1 -> Navigation.findNavController(it1).navigate(action) }
                     //binding.bottomNavigation.selectedItemId =it.itemId
                     return@setOnItemSelectedListener true
@@ -108,6 +110,7 @@ class LatestMessagesFragment : Fragment() {
             }
         })
         viewModel.informationMessage.observe(viewLifecycleOwner, Observer {
+            binding.informationTV.visibility = View.VISIBLE
             it?.let {
                 if (it){
                     binding.informationTV.text = "Mesaj Kutunuz Boş"

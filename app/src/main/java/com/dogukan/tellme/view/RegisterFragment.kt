@@ -57,16 +57,15 @@ class RegisterFragment : Fragment() {
         }
 
         val getImage = registerForActivityResult(
-            ActivityResultContracts.GetContent(),
-            ActivityResultCallback {
-                val bitmap = MediaStore.Images.Media.getBitmap(context?.contentResolver,it)
-                val bitmapDrawable = BitmapDrawable(bitmap)
-                binding.registerCircleImageView.setImageDrawable(bitmapDrawable)
+            ActivityResultContracts.GetContent()
+        ) {
+            val bitmap = MediaStore.Images.Media.getBitmap(context?.contentResolver, it)
+            val bitmapDrawable = BitmapDrawable(bitmap)
+            binding.registerCircleImageView.setImageDrawable(bitmapDrawable)
 
-                selectedPhotoUri = it
-                binding.selectPhotobtn.setImageDrawable(null)
-            }
-        )
+            selectedPhotoUri = it
+            binding.selectPhotobtn.setImageDrawable(null)
+        }
         binding.selectPhotobtn.setOnClickListener {
             getImage.launch("image/*")
         }
@@ -85,9 +84,12 @@ class RegisterFragment : Fragment() {
                 val map: MutableMap<String, Any> = HashMap()
                 map["token"] = token
                 databaseReference.updateChildren(map)
+                goToLatestMessageFragment()
             }
-            goToLatestMessageFragment()
+
         }
+            //goToLatestMessageFragment()
+
     }
     private fun performRegister(){
         val email = binding.RegisterEmailET.text.toString().trim()
@@ -168,17 +170,23 @@ class RegisterFragment : Fragment() {
 
     }
     private fun saveUserToFirebaseDatabase(profileImageURL: String){
-        val uid = FirebaseAuth.getInstance().uid ?: ""
-        val email =  FirebaseAuth.getInstance().currentUser?.email
-        val status = "Welcome Tellme"
-        val ref = FirebaseDatabase.getInstance().getReference("/users/$uid")
-        val user = Users(uid, binding.RegisterUserNameET.text.toString(), profileImageURL,status,
-            email.toString(),"Online"
-        )
-        ref.setValue(user)
-            .addOnSuccessListener {
-                goToLatestMessageFragment()
-            }
+
+        FirebaseMessaging.getInstance().token.addOnSuccessListener {
+            val token = it
+            val uid = FirebaseAuth.getInstance().uid ?: ""
+            val email = FirebaseAuth.getInstance().currentUser?.email
+            val status = "Welcome Tellme"
+            val ref = FirebaseDatabase.getInstance().getReference("/users/${appUtil.getUID()}")
+            val user = Users(
+                uid, binding.RegisterUserNameET.text.toString(), profileImageURL, status,
+                email.toString(), "Online", token
+            )
+            ref.setValue(user)
+                .addOnSuccessListener {
+                    goToLatestMessageFragment()
+                }
+        }
+
     }
 
 }

@@ -4,6 +4,7 @@
     package="com.dogukan.tellme">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE"/>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
         tools:ignore="ScopedStorage" />
@@ -17,6 +18,7 @@
         android:theme="@style/Theme.TellMe">
         <activity
             android:name=".SplashActivity"
+
             android:exported="true" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -34,17 +36,20 @@
 
         <activity
             android:name=".view.MainActivity"
+            android:launchMode="singleTop"
             android:exported="true"
             android:label="Tellme">
 
         </activity>
 
         <service
-            android:name=".service.MessagingService"
+            android:name=".service.FirebaseService"
+            android:permission="com.google.android.c2dm.permission.SEND"
             android:exported="true"
             tools:ignore="Instantiatable">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
             </intent-filter>
         </service>
     </application>

@@ -42,14 +42,21 @@ class LatestMessagesRVAdapter (private val chatMessage:ArrayList<ChatMessage> ,p
     }
     override fun onBindViewHolder(holder: LatestMessagesViewHolder, position: Int) {
 
-        holder.itemProgressBar.visibility = View.VISIBLE
-        holder.itemLastestMessageTimeStamp.text = chatMessage[position].TimeStamp
-        holder.itemLastestMessage.text = chatMessage[position].text
-        val chatPartnerID : String
 
-        if (userList.size != 0 && userList.size != position){
+
+
+
+        if (userList.size != 0 && userList.size == chatMessage.size){
             holder.itemUserName.text = userList[position].username
             addition.picassoUseIt(userList[position].profileImageURL,holder.itemImage,holder.itemProgressBar)
+        }
+
+        holder.itemProgressBar.visibility = View.VISIBLE
+        holder.itemLastestMessageTimeStamp.text = chatMessage[position].TimeStamp
+        if (chatMessage[position].type=="TEXT"){
+            holder.itemLastestMessage.text = chatMessage[position].text
+        }else{
+            holder.itemLastestMessage.text = "Picture"
         }
 
 
@@ -58,7 +65,12 @@ class LatestMessagesRVAdapter (private val chatMessage:ArrayList<ChatMessage> ,p
             val action = LatestMessagesFragmentDirections.actionLatestMessagesFragment2ToChatLogFragment(position,
                 userList[position].uid,
                 userList[position].username,
-                userList[position].profileImageURL)
+                userList[position].profileImageURL,
+                userList[position].status,
+                userList[position].activeState,
+                userList[position].Email,
+                userList[position].token!!
+            )
             Navigation.findNavController(it).navigate(action)
         }
     }
@@ -73,6 +85,7 @@ class LatestMessagesRVAdapter (private val chatMessage:ArrayList<ChatMessage> ,p
         chatMessage.addAll(latesMessageList)
         notifyDataSetChanged()
     }
+
     @SuppressLint("NotifyDataSetChanged")
     fun latestUserUpdate(userList: List<Users>){
         this.userList.clear()

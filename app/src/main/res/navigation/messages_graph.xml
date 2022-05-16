@@ -101,6 +101,28 @@
             android:name="imageURL"
             app:argType="string"
             android:defaultValue="0" />
+        <action
+            android:id="@+id/action_chatLogFragment_to_friendDetailFragment"
+            app:destination="@id/friendDetailFragment" />
+        <argument
+            android:name="status"
+            app:argType="string"
+            android:defaultValue="0" />
+        <argument
+            android:name="activeState"
+            app:argType="string"
+            android:defaultValue="0" />
+        <argument
+            android:name="email"
+            app:argType="string"
+            android:defaultValue="0" />
+        <action
+            android:id="@+id/action_chatLogFragment_to_reViewSendImageFragment"
+            app:destination="@id/reViewSendImageFragment" />
+        <argument
+            android:name="token"
+            app:argType="string"
+            android:defaultValue="0" />
     </fragment>
     <fragment
         android:id="@+id/settingsFragment"
@@ -121,5 +143,57 @@
         <action
             android:id="@+id/action_editSettingsFragment_to_settingsFragment"
             app:destination="@id/settingsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/friendDetailFragment"
+        android:name="com.dogukan.tellme.FriendDetailFragment"
+        android:label="FriendDetailFragment" >
+        <action
+            android:id="@+id/action_friendDetailFragment_to_chatLogFragment"
+            app:destination="@id/chatLogFragment" />
+        <argument
+            android:name="position"
+            app:argType="integer"
+            android:defaultValue="0" />
+        <argument
+            android:name="toID"
+            app:argType="string"
+            android:defaultValue="0" />
+        <argument
+            android:name="userName"
+            app:argType="string"
+            android:defaultValue="0" />
+        <argument
+            android:name="imageURL"
+            app:argType="string"
+            android:defaultValue="0" />
+        <argument
+            android:name="status"
+            app:argType="string"
+            android:defaultValue="0" />
+        <argument
+            android:name="activeState"
+            app:argType="string"
+            android:defaultValue="0" />
+        <argument
+            android:name="email"
+            app:argType="string"
+            android:defaultValue="0" />
+    </fragment>
+    <fragment
+        android:id="@+id/reViewSendImageFragment"
+        android:name="com.dogukan.tellme.ReViewSendImageFragment"
+        android:label="ReViewSendImageFragment" >
+        <action
+            android:id="@+id/action_reViewSendImageFragment_to_chatLogFragment"
+            app:destination="@id/chatLogFragment" />
+        <argument
+            android:name="toID"
+            app:argType="string"
+            android:defaultValue="0" />
+        <argument
+            android:name="imageURL"
+            app:argType="string"
+            android:defaultValue="0" />
     </fragment>
 </navigation>

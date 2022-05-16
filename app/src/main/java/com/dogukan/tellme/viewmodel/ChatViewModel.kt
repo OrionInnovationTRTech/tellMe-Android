@@ -1,5 +1,6 @@
 package com.dogukan.tellme.viewmodel
 
+import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -14,8 +15,19 @@ class ChatViewModel() : ViewModel(), ChatRepositoryI {
     val message = MutableLiveData<List<ChatMessage>>()
     val activeState = MutableLiveData<Boolean>()
     val isSeen = MutableLiveData<Boolean>()
+    val isTyping = MutableLiveData<Boolean>()
+    val imageUpload = MutableLiveData<Boolean>()
+    val deleteMessage = MutableLiveData<Boolean>()
 
-
+    fun setIsTyping(isTyping: String){
+        chatRepository.setActiveTyping(isTyping)
+    }
+    fun getIsTyping(toID: String){
+        chatRepository.getActiveTyping(toID)
+    }
+    fun getIstypingData() : LiveData<Boolean>{
+        return isTyping
+    }
     fun getActiveState() : LiveData<Boolean>{
         return activeState
     }
@@ -33,11 +45,17 @@ class ChatViewModel() : ViewModel(), ChatRepositoryI {
     fun getIsSeenStatus() : LiveData<Boolean>{
         return isSeen
     }
+    fun deleteMessage(toID : String,message : String,list : ArrayList<ChatMessage>,positon : Int){
+        chatRepository.deleteMessage(toID,message,list,positon)
+    }
     fun performSendMessage(text : String, toID: String, binding: FragmentChatLogBinding){
         chatRepository.performSendMessage(text,toID,binding)
     }
+    fun performSendImage(uri: Uri, toID: String){
+        chatRepository.uploudImageToFirebaseStorage(uri , toID)
+    }
 
-    fun checkIsSeen(toID: String){
+    fun checkIsSeenMessage(toID: String){
         chatRepository.seenMessage(toID)
     }
     override fun showListOfMessage(messageList: ArrayList<ChatMessage>) {
@@ -54,8 +72,22 @@ class ChatViewModel() : ViewModel(), ChatRepositoryI {
         this.isSeen.value = isSeen
     }
 
+    override fun checkIsTyping(isTyping: String) {
+        this.isTyping.value = isTyping.equals("yes")
+
+    }
+
 
     override fun sendMessage() {
 
+    }
+
+    override fun deleteMessage(isDeleted: Boolean) {
+        deleteMessage.value = isDeleted
+    }
+
+
+    override fun sendImage(isUpload: Boolean) {
+        imageUpload.value = isUpload
     }
 }

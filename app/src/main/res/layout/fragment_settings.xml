@@ -114,9 +114,9 @@
                 </androidx.cardview.widget.CardView>
 
                 <androidx.cardview.widget.CardView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
                     android:id="@+id/statusCard"
+                    android:layout_width="match_parent"
+                    android:layout_height="101dp"
                     app:cardBackgroundColor="#FBDCC2"
                     app:cardCornerRadius="8dp"
                     app:cardUseCompatPadding="true"
@@ -141,14 +141,21 @@
                         <TextView
                             android:id="@+id/txtProfileStatus"
                             android:layout_width="match_parent"
-                            android:layout_height="35dp"
+                            android:layout_height="59dp"
                             android:layout_centerHorizontal="true"
                             android:layout_marginLeft="10dp"
+                            android:autoText="true"
+                            android:gravity="center"
                             android:padding="2dp"
                             android:text="@{userModel.status , default=Welcome}"
+
+                            android:textAlignment="textStart"
                             android:textColor="@color/black"
                             android:textSize="20sp"
-                            android:textStyle="bold" />
+                            android:textStyle="bold"
+                            app:autoSizeMaxTextSize="20sp"
+                            app:autoSizeMinTextSize="10sp"
+                            app:autoSizeTextType="uniform" />
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
 

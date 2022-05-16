@@ -61,10 +61,10 @@ class NewMessagesFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.recyclerView4.layoutManager = LinearLayoutManager(context)
-        adapter = NewMessagesRVAdapter(newMessagesList)
+
         viewModel.getUser()
         viewModel.getAllUsers()
-
+        adapter = NewMessagesRVAdapter(newMessagesList)
         binding.recyclerView4.adapter = adapter
         observeLiveData()
         binding.swipeRefleshLayoutNewMessages.setOnRefreshListener {

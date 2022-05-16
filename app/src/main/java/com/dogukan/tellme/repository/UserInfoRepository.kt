@@ -19,11 +19,11 @@ class UserInfoRepository()  {
     private var liveData : MutableLiveData<Users>?=null
     private val appUtil = AppUtil()
 
-     fun getUser() : LiveData<Users>{
+     fun getUser(userID : String?) : LiveData<Users>{
         if (liveData == null){
             liveData = MutableLiveData()
         }
-        databaseRef = FirebaseDatabase.getInstance().getReference("users").child(appUtil.getUID()!!)
+        databaseRef = FirebaseDatabase.getInstance().getReference("users").child(userID!!)
         databaseRef.addValueEventListener(object : ValueEventListener{
             @SuppressLint("NullSafeMutableLiveData")
             override fun onDataChange(snapshot: DataSnapshot) {
@@ -41,20 +41,17 @@ class UserInfoRepository()  {
     fun changePhoto(selectedPhotoUri : Uri){
         val filename = UUID.randomUUID().toString()
         val ref = FirebaseStorage.getInstance().getReference("/images/$filename")
-        if (selectedPhotoUri!=null){
-            ref.putFile(selectedPhotoUri)
-                .addOnSuccessListener {
 
-                    ref.downloadUrl.addOnSuccessListener {
-                        updateProfileImage(it.toString())
-                        Log.d("RegisterActivityy", "Successfully uploaded image : $it")
-                    }
+        ref.putFile(selectedPhotoUri)
+            .addOnSuccessListener {
+                ref.downloadUrl.addOnSuccessListener {
+                    updateProfileImage(it.toString())
+                    Log.d("RegisterActivityy", "Successfully uploaded image : $it")
                 }
-                .addOnFailureListener {
+            }
+            .addOnFailureListener {
                     Log.d("RegisterActivityy", "Successfully uploaded image : ${it.message}")
-                }
-        }
-
+            }
     }
 
     private fun updateProfileImage(profileImageURL: String){

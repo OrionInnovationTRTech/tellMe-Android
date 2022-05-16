@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import android.widget.TextView
 import androidx.activity.result.ActivityResultCallback
 import androidx.activity.result.contract.ActivityResultContracts
@@ -23,6 +24,7 @@ import androidx.navigation.Navigation
 import com.dogukan.tellme.EditSettingsFragment
 import com.dogukan.tellme.R
 import com.dogukan.tellme.databinding.FragmentSettingsBinding
+import com.dogukan.tellme.util.AppUtil
 import com.dogukan.tellme.viewmodel.SettingsViewModel
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import kotlinx.android.synthetic.main.fragment_edit_settings.*
@@ -32,6 +34,7 @@ class SettingsFragment : Fragment() {
     private lateinit var binding : FragmentSettingsBinding
     private val viewModel : SettingsViewModel by viewModels()
     private lateinit var  mainActivityView : MainActivity
+    private val appUtil = AppUtil()
 
     var selectedPhotoUri : Uri?=null
 
@@ -41,6 +44,8 @@ class SettingsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        binding.bottomNavigation.selectedItemId = R.id.settings;
         binding.bottomNavigation.setOnItemSelectedListener {
             when(it.itemId){
                 R.id.chat ->{
@@ -67,11 +72,11 @@ class SettingsFragment : Fragment() {
                 val alertDialog = AlertDialog.Builder(context)
                 alertDialog.setMessage("Do you want to change your picture?")
                 alertDialog.setTitle("change picture")
-                alertDialog.setPositiveButton("Yes",DialogInterface.OnClickListener{dialog, which ->
+                alertDialog.setPositiveButton("Yes",DialogInterface.OnClickListener{ dialog, _ ->
                     viewModel.changePhoto(selectedPhotoUri!!)
                     dialog.cancel()
                 })
-                alertDialog.setNegativeButton("No" ,DialogInterface.OnClickListener{dialog, which ->
+                alertDialog.setNegativeButton("No" ,DialogInterface.OnClickListener{ dialog, _ ->
                     dialog.cancel()
                 })
                 val alert = alertDialog.create()
@@ -113,7 +118,7 @@ class SettingsFragment : Fragment() {
     ): View? {
         binding = DataBindingUtil.inflate(inflater,R.layout.fragment_settings,container,false)
 
-        viewModel.getUser().observe(viewLifecycleOwner, Observer {
+        viewModel.getUser(appUtil.getUID()!!).observe(viewLifecycleOwner, Observer {
             binding.userModel = it
             binding.settingsProgressBar.visibility = View.GONE
 

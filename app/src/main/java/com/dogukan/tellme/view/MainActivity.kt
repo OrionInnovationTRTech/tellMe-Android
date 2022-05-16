@@ -5,17 +5,10 @@ import android.os.Bundle
 import android.util.Log
 import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
-import androidx.cardview.widget.CardView
-import androidx.fragment.app.FragmentTransaction
-import com.dogukan.tellme.EditSettingsFragment
 import com.dogukan.tellme.R
-import com.dogukan.tellme.util.Addition
 import com.dogukan.tellme.util.AppUtil
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
-import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.fragment_latest_messages.*
-import kotlinx.android.synthetic.main.fragment_settings.*
 
 
 class MainActivity : AppCompatActivity() {
@@ -28,7 +21,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
+        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
 
 
 
@@ -53,6 +46,7 @@ class MainActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         activeState("online")
+
     }
 
     override fun onPause() {

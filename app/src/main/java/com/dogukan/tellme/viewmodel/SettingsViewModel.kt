@@ -10,8 +10,8 @@ import com.dogukan.tellme.repository.UserInfoRepository
 class SettingsViewModel : ViewModel() {
     private var userInfoRepository = UserInfoRepository.StaticFunction.getInstance()
 
-    fun getUser() : LiveData<Users>{
-        return userInfoRepository.getUser()
+    fun getUser(userID : String) : LiveData<Users>{
+        return userInfoRepository.getUser(userID)
     }
     fun changePhoto(selectedPhotoUri : Uri){
         userInfoRepository.changePhoto(selectedPhotoUri)
