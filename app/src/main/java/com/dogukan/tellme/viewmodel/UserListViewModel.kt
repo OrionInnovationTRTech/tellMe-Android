@@ -21,15 +21,7 @@ class UserListViewModel() : ViewModel(), UserRepositoryI {
     }
     override fun showListOfUser(userList: ArrayList<Users>) {
         users.value = userList
-        if (userList.size==0){
-            Log.d("MessageEmpty","EmptyMessage")
-            informationMessage.value = true
-        }
-        else{
-            informationMessage.value = false
-
-            Log.d("MessageEmpty","EmptyMessage2")
-        }
+        informationMessage.value = userList.size==0
         userLoading.value = false
     }
 }

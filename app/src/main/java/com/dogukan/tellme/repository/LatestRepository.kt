@@ -27,9 +27,6 @@ class LatestRepository(latestRepositoryI: LatestRepositoryI) {
                 val chatMessage = snapshot.getValue(ChatMessage::class.java)
                 if (chatMessage!=null){
                     latestMessagesMap[snapshot.key!!]=chatMessage
-                    latestMessagesMap.toSortedMap(reverseOrder())
-                    //latestMessageList.add(chatMessage)
-
                     latestRepositoryI?.showLatestMessage(latestMessageList)
                     refreshRecyclerViewMessages()
                 }
@@ -45,9 +42,6 @@ class LatestRepository(latestRepositoryI: LatestRepositoryI) {
                         val user = snapshot.getValue(Users::class.java)
                         if (user!=null) {
                             latestUserInfoListMap[snapshot.key!!] = user
-                            latestUserInfoListMap.forEach{
-                                Log.d("ToIDDD",it.value.username)
-                            }
                             latestRepositoryI?.showUserInfoLatestMessage(latestUserInfoList)
                             refreshRecyclerViewMessagesInUser()
                         }
@@ -79,9 +73,6 @@ class LatestRepository(latestRepositoryI: LatestRepositoryI) {
                         val user = snapshot.getValue(Users::class.java)
                         if (user!=null) {
                             latestUserInfoListMap[snapshot.key!!] = user
-                            latestUserInfoListMap.forEach{
-                                Log.d("ToIDDD",it.value.username)
-                            }
                             latestRepositoryI?.showUserInfoLatestMessage(latestUserInfoList)
                             refreshRecyclerViewMessagesInUser()
                         }
@@ -94,21 +85,13 @@ class LatestRepository(latestRepositoryI: LatestRepositoryI) {
                 })
             }
             override fun onChildRemoved(snapshot: DataSnapshot) {
-                //refreshRecyclerViewMessages()
-
             }
             override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {
-                //refreshRecyclerViewMessages()
-
             }
             override fun onCancelled(error: DatabaseError) {
-
             }
 
         })
-
-
-
     }
     fun refreshRecyclerViewMessages(){
         latestMessageList.clear()
@@ -121,15 +104,11 @@ class LatestRepository(latestRepositoryI: LatestRepositoryI) {
     fun refreshRecyclerViewMessagesInUser(){
         latestUserInfoList.clear()
         latestUserInfoListMap.values.forEach {
-
             latestUserInfoList.add(it)
-
         }
         latestRepositoryI?.showUserInfoLatestMessage(latestUserInfoList)
 
     }
-
-
     fun fetchCurrentUser(){
         val uid = FirebaseAuth.getInstance().uid
         val ref = FirebaseDatabase.getInstance().getReference("/users/$uid")

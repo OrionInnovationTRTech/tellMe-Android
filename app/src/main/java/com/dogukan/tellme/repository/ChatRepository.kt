@@ -19,7 +19,6 @@ class ChatRepository(ChatRepositoryI: ChatRepositoryI) {
     private var chatRepositoryI : ChatRepositoryI ?= ChatRepositoryI
     private var chatMessageList = ArrayList<ChatMessage>()
     private  var AppUtil = AppUtil()
-    private lateinit var valueEventListener : ValueEventListener
 
      fun listenForMessage(toID : String){
         val ref = FirebaseDatabase.getInstance().getReference("/user-messages/${AppUtil.getUID()}/$toID")
@@ -30,36 +29,27 @@ class ChatRepository(ChatRepositoryI: ChatRepositoryI) {
                     chatMessageList.add(chatMessage)
                     chatRepositoryI?.showListOfMessage(chatMessageList)
                 }
-
             }
             override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
             }
             override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {
-
             }
             override fun onChildRemoved(snapshot: DataSnapshot) {
-
             }
             override fun onCancelled(error: DatabaseError) {
-
             }
         })
-        //seenMessage(toID)
     }
     fun deleteMessage(toID : String, message : String, chatMessageList : ArrayList<ChatMessage>, position : Int){
         val ref = FirebaseDatabase.getInstance().getReference("/user-messages/${AppUtil.getUID()}/$toID")
         val toref = FirebaseDatabase.getInstance().getReference("/user-messages/$toID/${AppUtil.getUID()}")
         val latestMessageRef = FirebaseDatabase.getInstance().getReference("/latest-messages/${AppUtil.getUID()}/$toID")
         val latestMessageToRef = FirebaseDatabase.getInstance().getReference("/latest-messages/$toID/${AppUtil.getUID()}")
-
         ref.removeValue()
         toref.removeValue()
-
         latestMessageRef.removeValue()
         latestMessageToRef.removeValue()
         chatRepositoryI?.deleteMessage(true)
-
-
     }
 
     fun seenMessage(toID : String){
@@ -75,8 +65,34 @@ class ChatRepository(ChatRepositoryI: ChatRepositoryI) {
                         chatRepositoryI?.checkIsSeen(true)
                     }
                 }
+            }
+            override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
+                val chatMessage = snapshot.getValue(ChatMessage::class.java)
+                if (chatMessage?.fromID.equals(toID) && chatMessage?.ToID.equals(AppUtil.getUID()) && (!chatMessage?.fromID.equals(AppUtil.getUID())) && (!chatMessage?.ToID.equals(toID))){
+                    snapshot.ref.child("seen").setValue(true)
+                    chatRepositoryI?.checkIsSeen(true)
 
+                }
+            }
+            override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {
 
+            }
+            override fun onChildRemoved(snapshot: DataSnapshot) {
+
+            }
+            override fun onCancelled(error: DatabaseError) {
+
+            }
+        })
+        ref.addChildEventListener(object : ChildEventListener {
+            override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
+                val chatMessage = snapshot.getValue(ChatMessage::class.java)
+                if (chatMessage!=null){
+                    if (chatMessage.fromID.equals(toID) && chatMessage.ToID.equals(AppUtil.getUID()) && (!chatMessage.fromID.equals(AppUtil.getUID())) && (!chatMessage.ToID.equals(toID))){
+                        snapshot.ref.child("seen").setValue(true)
+                        chatRepositoryI?.checkIsSeen(true)
+                    }
+                }
             }
             override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
                 val chatMessage = snapshot.getValue(ChatMessage::class.java)
@@ -147,15 +163,8 @@ class ChatRepository(ChatRepositoryI: ChatRepositoryI) {
             return
         }
          val c = System.currentTimeMillis();
-        // val d = c.time
-         //val b = c.get(Calendar.DATE.toLong().toInt())
-         //Log.d("Date",c.timeInMillis.nanoseconds.toString()+" ss "+d.toString())
-        //val hour = c.get(Calendar.HOUR_OF_DAY)
-        //val minute = c.get(Calendar.MINUTE)
 
-         //val timeStamp: String = String.format("%02d:%02d",hour,minute)
-
-        val chatMessage = ChatMessage(Ref.key!!, text.toString(), fromID.toString(), toID.toString(), c,false,"TEXT","no")
+        val chatMessage = ChatMessage(Ref.key!!, text, fromID.toString(), toID, c,false,"TEXT","no")
         Ref.setValue(chatMessage)
             .addOnSuccessListener {
                 binding.sendmassegeTV.text.clear()
@@ -174,7 +183,7 @@ class ChatRepository(ChatRepositoryI: ChatRepositoryI) {
         ref.putFile(uri)
             .addOnSuccessListener {
                 ref.downloadUrl.addOnSuccessListener {
-                    performSendImage(uri.toString(),toID)
+                    performSendImage(it.toString(),toID)
                 }
             }
             .addOnFailureListener {
@@ -193,19 +202,16 @@ class ChatRepository(ChatRepositoryI: ChatRepositoryI) {
         val chatMessage = ChatMessage(Ref.key!!, imageUrl, fromID.toString(), toID, c,false,"IMAGE","no")
         Ref.setValue(chatMessage)
             .addOnSuccessListener {
-                //chatRepositoryI?.sendImage(true)
+                chatRepositoryI?.sendImage(true)
             }
             .addOnFailureListener {
-                //chatRepositoryI?.sendImage(false)
+                chatRepositoryI?.sendImage(false)
             }
         toRef.setValue(chatMessage)
         val latestMessageRef = FirebaseDatabase.getInstance().getReference("/latest-messages/$fromID/$toID")
         latestMessageRef.setValue(chatMessage)
         val latestMessageToRef = FirebaseDatabase.getInstance().getReference("/latest-messages/$toID/$fromID")
         latestMessageToRef.setValue(chatMessage)
-
-
-
 
     }
 

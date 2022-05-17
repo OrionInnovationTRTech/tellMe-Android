@@ -17,7 +17,7 @@
         android:orientation="horizontal"
         android:padding="5dp">
         <TextView
-            android:textColor="@color/black"
+            android:textColor="@color/white"
             android:id="@+id/Change_textView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -41,6 +41,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="2dp"
             android:layout_weight="1"
+            android:textColor="@color/white"
             android:hint="Name"
             android:textSize="17sp" />
 
@@ -58,6 +59,7 @@
             android:text="Cancel"
             android:layout_width="wrap_content"
             android:id="@+id/CancelButton"
+            android:textColor="@color/black"
             android:layout_marginLeft="10dp"
 
             android:layout_height="wrap_content">
@@ -67,6 +69,7 @@
         <Button
             android:id="@+id/SaveButton"
             android:layout_width="wrap_content"
+            android:textColor="@color/black"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
             android:text="Save">

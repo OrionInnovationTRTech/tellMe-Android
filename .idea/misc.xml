@@ -10,6 +10,7 @@
         <entry key="app/src/main/res/drawable/chat_to_row_background.xml" value="0.335" />
         <entry key="app/src/main/res/drawable/ic_launcher_background.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/layout_bg.xml" value="0.267" />
+        <entry key="app/src/main/res/drawable/layout_bg_unread_message.xml" value="0.1955" />
         <entry key="app/src/main/res/drawable/layout_top_bar.xml" value="0.28" />
         <entry key="app/src/main/res/drawable/rounded_button.xml" value="0.168" />
         <entry key="app/src/main/res/drawable/rounded_edittext_register_login.xml" value="0.168" />

@@ -1,28 +1,21 @@
 package com.dogukan.tellme.view
 
-import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModel
 import androidx.navigation.Navigation
-import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.dogukan.tellme.R
 import com.dogukan.tellme.adapter.LatestMessagesRVAdapter
 
 import com.dogukan.tellme.databinding.FragmentLatestMessagesBinding
-import com.dogukan.tellme.databinding.FragmentRegisterBinding
 import com.dogukan.tellme.models.ChatMessage
 import com.dogukan.tellme.models.Users
 import com.dogukan.tellme.viewmodel.LatestMessagesViewModel
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.*
 import kotlinx.android.synthetic.main.fragment_latest_messages.*
 
 
@@ -33,7 +26,6 @@ class LatestMessagesFragment : Fragment() {
     private lateinit var adapter : LatestMessagesRVAdapter
     var lastestChatMessageList = ArrayList<ChatMessage>()
     var userList = ArrayList<Users>()
-    private lateinit var user : Users
 
     companion object{
         var users : Users ?= null
@@ -48,7 +40,9 @@ class LatestMessagesFragment : Fragment() {
     }
     private fun init(){
 
-        binding.recyclerView3.layoutManager = LinearLayoutManager(context)
+        val linearLayoutManager :  LinearLayoutManager = LinearLayoutManager(context)
+
+        binding.recyclerView3.layoutManager = linearLayoutManager
         viewModel.getUserInfo()
         viewModel.listenForLatestMessages()
         viewModel.refreshRecyclerViewMessage()
@@ -62,16 +56,9 @@ class LatestMessagesFragment : Fragment() {
         activity?.supportActionBar?.setDisplayHomeAsUpEnabled(false)
         binding.recyclerView3.adapter = adapter
         observeLiveData()
-        binding.swipeRefleshLayout.setOnRefreshListener {
-            binding.loadingBar.visibility = View.VISIBLE
-            binding.recyclerView3.visibility = View.GONE
-            binding.informationTV.visibility = View.GONE
-            viewModel.listenForLatestMessages()
-            viewModel.refreshRecyclerViewMessage()
-            swipeRefleshLayout.isRefreshing=false
-
-        }
+        setSwipeRefleshLayout()
         binding.bottomNavigation.selectedItemId = R.id.chat;
+
         binding.bottomNavigation.setOnItemSelectedListener {
             when(it.itemId){
                 R.id.chat ->{
@@ -90,6 +77,17 @@ class LatestMessagesFragment : Fragment() {
         }
 
     }
+    private fun setSwipeRefleshLayout(){
+        binding.swipeRefleshLayout.setOnRefreshListener {
+            binding.loadingBar.visibility = View.VISIBLE
+            binding.recyclerView3.visibility = View.GONE
+            binding.informationTV.visibility = View.GONE
+            viewModel.listenForLatestMessages()
+            viewModel.refreshRecyclerViewMessage()
+            swipeRefleshLayout.isRefreshing=false
+
+        }
+    }
     private fun observeLiveData(){
         viewModel.latestMessage.observe(viewLifecycleOwner, Observer {
             it?.let {
@@ -100,7 +98,7 @@ class LatestMessagesFragment : Fragment() {
 
             }
         })
-        viewModel.latestuser.observe(viewLifecycleOwner, Observer {
+        viewModel.latestUser.observe(viewLifecycleOwner, Observer {
             it?.let {
                 binding.loadingBar.visibility = View.GONE
                 binding.informationTV.text = ""
@@ -135,17 +133,13 @@ class LatestMessagesFragment : Fragment() {
 
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
         (activity as AppCompatActivity).supportActionBar?.show()
         setHasOptionsMenu(true)
         observeLiveData()
         binding = FragmentLatestMessagesBinding.inflate(layoutInflater)
-
         return binding.root
-
     }
 
     override fun onStart() {
@@ -156,6 +150,14 @@ class LatestMessagesFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         mainActivity.activeState("online")
+    }
+    override fun onStop() {
+        super.onStop()
+        mainActivity.activeState("offline")
+    }
+    override fun onDestroy() {
+        super.onDestroy()
+        mainActivity.activeState("offline")
     }
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
 
@@ -171,7 +173,6 @@ class LatestMessagesFragment : Fragment() {
                 view?.let { it1 -> Navigation.findNavController(it1).navigate(action) }
             }
             R.id.menu_sign_out ->{
-
                 mainActivity.activeState("offline")
                 FirebaseAuth.getInstance().signOut()
                 val action = LatestMessagesFragmentDirections.actionLatestMessagesFragment2ToRegisterFragment()

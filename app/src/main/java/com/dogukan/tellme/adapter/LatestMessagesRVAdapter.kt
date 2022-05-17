@@ -7,6 +7,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ProgressBar
 import android.widget.TextView
+import androidx.compose.ui.graphics.Color
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
 import com.dogukan.tellme.R
@@ -45,11 +47,17 @@ class LatestMessagesRVAdapter (private val chatMessage:ArrayList<ChatMessage> ,p
     }
     @SuppressLint("SimpleDateFormat")
     override fun onBindViewHolder(holder: LatestMessagesViewHolder, position: Int) {
+
         if (userList.size != 0 && userList.size == chatMessage.size){
             holder.itemUserName.text = userList[position].username
             addition.picassoUseIt(userList[position].profileImageURL,holder.itemImage,holder.itemProgressBar)
         }
-
+        if (!chatMessage[position].isSeen){
+            holder.itemView.findViewById<ConstraintLayout>(R.id.latest_message_constraint_layout).setBackgroundResource(R.drawable.layout_bg)
+        }
+        else{
+            holder.itemView.findViewById<ConstraintLayout>(R.id.latest_message_constraint_layout).setBackgroundResource(R.drawable.layout_bg)
+        }
         holder.itemProgressBar.visibility = View.VISIBLE
         val sdf = SimpleDateFormat("HH:mm")
         val netDate = Date(chatMessage[position].TimeStamp)
@@ -62,9 +70,7 @@ class LatestMessagesRVAdapter (private val chatMessage:ArrayList<ChatMessage> ,p
             holder.itemLastestMessage.text = "Picture"
         }
 
-
         holder.itemView.setOnClickListener {
-
             val action = LatestMessagesFragmentDirections.actionLatestMessagesFragment2ToChatLogFragment(position,
                 userList[position].uid,
                 userList[position].username,

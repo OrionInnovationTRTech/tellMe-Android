@@ -76,18 +76,17 @@ class ChatLogRVAdapter(private val chatmessages : ArrayList<ChatMessage> ,privat
     }
     @SuppressLint("SimpleDateFormat")
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-
+        //Sender
         if (holder.itemViewType == SENDER_VIEW_TYPE) {
             (holder as SenderViewHolder).senderIsSeen.visibility = View.VISIBLE
-
+                //message type text
                 if (chatmessages[position].type == "TEXT"){
-                    (holder as SenderViewHolder).senderLinearLayout.visibility = View.GONE
+                    holder.senderLinearLayout.visibility = View.GONE
                     holder.senderConstraintLayout.visibility = View.VISIBLE
                     holder.sendermessage.text = chatmessages[position].text
                     val sdf = SimpleDateFormat("HH:mm")
                     val netDate = Date(chatmessages[position].TimeStamp)
                     val timestamp = sdf.format(netDate)
-                    //val timeStamp: String = String.format("%02d:%02d",chatmessages[position].TimeStamp.time.hours,chatmessages[position].TimeStamp.time.minutes)
                     holder.senderTimeStamp.text = timestamp
                     holder.sendermessage.setOnLongClickListener {
                         if (chatmessages[position].fromID.equals(appUtil.getUID())) {
@@ -104,17 +103,17 @@ class ChatLogRVAdapter(private val chatmessages : ArrayList<ChatMessage> ,privat
 
                     }
 
-                    //recyclerDetails.showIsSeenSender(holder,chatmessages,position)
+                    recyclerDetails.showIsSeenSender(holder,chatmessages,position)
 
                 }
+                //message type image
                 else{
-                    (holder as SenderViewHolder).senderLinearLayout.visibility = View.VISIBLE
+                    holder.senderLinearLayout.visibility = View.VISIBLE
                     holder.senderConstraintLayout.visibility = View.GONE
                     addition.picassoUseIt(chatmessages[position].text,holder.senderImage)
                     val sdf = SimpleDateFormat("HH:mm")
                     val netDate = Date(chatmessages[position].TimeStamp)
                     val timestamp = sdf.format(netDate)
-                   // val timeStamp: String = String.format("%02d:%02d",chatmessages[position].TimeStamp.time.hours,chatmessages[position].TimeStamp.time.minutes)
                     holder.senderTimeStampImage.text = timestamp
                     holder.sendermessage.setOnLongClickListener {
                         if (chatmessages[position].fromID.equals(appUtil.getUID())) {
@@ -123,7 +122,7 @@ class ChatLogRVAdapter(private val chatmessages : ArrayList<ChatMessage> ,privat
                         }
                         return@setOnLongClickListener true
                     }
-                    //recyclerDetails.showIsSeenSender(holder,chatmessages,position)
+                    recyclerDetails.showIsSeenSender(holder,chatmessages,position)
 
                 }
 
@@ -142,17 +141,17 @@ class ChatLogRVAdapter(private val chatmessages : ArrayList<ChatMessage> ,privat
             }
 
 
-        } else {
-
+        }
+        //Reciever
+        else {
+            //Message type text
             if (chatmessages[position].type == "TEXT"){
-
                 (holder as RecieverViewHolder).recieverLinearLayout.visibility = View.GONE
                 holder.recieverConstraintLayout.visibility = View.VISIBLE
                 holder.recievermessage.text = chatmessages[position].text
                 val sdf = SimpleDateFormat("HH:mm")
                 val netDate = Date(chatmessages[position].TimeStamp)
                 val timestamp = sdf.format(netDate)
-               // val timeStamp: String = String.format("%02d:%02d",chatmessages[position].TimeStamp.time.hours,chatmessages[position].TimeStamp.time.minutes)
                 holder.recieverTimeStamp.text = timestamp
                 holder.recievermessage.setOnLongClickListener {
                     if (chatmessages[position].fromID.equals(appUtil.getUID())) {
@@ -170,6 +169,7 @@ class ChatLogRVAdapter(private val chatmessages : ArrayList<ChatMessage> ,privat
                 }
 
             }
+            //Message type image
             else{
                 (holder as RecieverViewHolder).recieverLinearLayout.visibility = View.VISIBLE
                 holder.recieverConstraintLayout.visibility = View.GONE
@@ -177,11 +177,9 @@ class ChatLogRVAdapter(private val chatmessages : ArrayList<ChatMessage> ,privat
                 val sdf = SimpleDateFormat("HH:mm")
                 val netDate = Date(chatmessages[position].TimeStamp)
                 val timestamp = sdf.format(netDate)
-                //val timeStamp: String = String.format("%02d:%02d",chatmessages[position].TimeStamp.time.hours,chatmessages[position].TimeStamp.time.minutes)
                 holder.recieverTimeStampImage.text = timestamp
                 holder.recievermessage.setOnLongClickListener {
                     if (chatmessages[position].fromID.equals(appUtil.getUID())) {
-                        Log.d("OnLong", "Selam")
                         holder.recieverTrashImage.visibility = View.VISIBLE
                     }
                     return@setOnLongClickListener true
@@ -195,8 +193,10 @@ class ChatLogRVAdapter(private val chatmessages : ArrayList<ChatMessage> ,privat
     @SuppressLint("NotifyDataSetChanged")
     fun ChatMessageUpdate(NewUserList : List<ChatMessage>){
         chatmessages.clear()
-        chatmessages.addAll(NewUserList)
-        notifyDataSetChanged()
+        if (chatmessages.isEmpty()){
+            chatmessages.addAll(NewUserList)
+            notifyDataSetChanged()
+        }
     }
 
 

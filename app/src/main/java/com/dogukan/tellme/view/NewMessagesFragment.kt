@@ -31,6 +31,7 @@ import kotlinx.android.synthetic.main.fragment_new_messages.*
 class NewMessagesFragment : Fragment() {
     private val viewModel : UserListViewModel by viewModels()
     private lateinit var binding : FragmentNewMessagesBinding
+    private var  mainActivityView : MainActivity = MainActivity()
     private lateinit var adapter : NewMessagesRVAdapter
     var newMessagesList = ArrayList<Users>()
 
@@ -106,6 +107,18 @@ class NewMessagesFragment : Fragment() {
                 }
             }
         })
+    }
+    override fun onStop() {
+        super.onStop()
+        mainActivityView.activeState("offline")
+    }
+    override fun onDestroy() {
+        super.onDestroy()
+        mainActivityView.activeState("offline")
+    }
+    override fun onResume() {
+        super.onResume()
+        mainActivityView.activeState("online")
     }
 
 

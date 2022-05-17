@@ -78,7 +78,7 @@ class UserInfoRepository()  {
     object StaticFunction{
         private var instance : UserInfoRepository?= null
         fun getInstance() : UserInfoRepository{
-            if (instance==null){
+            if (instance == null){
                 instance = UserInfoRepository()
             }
             return instance!!

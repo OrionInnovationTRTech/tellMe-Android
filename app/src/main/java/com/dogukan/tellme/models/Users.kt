@@ -15,14 +15,8 @@ import kotlinx.android.parcel.Parcelize
 class Users(var uid : String , var username:String,var profileImageURL:String, var status : String, var Email : String, var activeState : String ,var token : String?) : Parcelable{
     constructor() : this("","","","","","offline","")
 
-
-
-
     companion object{
-
-
         private val addition = Addition()
-
         @JvmStatic
         @BindingAdapter("imageUrl")
         fun loadImage(view : CircleImageView , imageUrl : String?){

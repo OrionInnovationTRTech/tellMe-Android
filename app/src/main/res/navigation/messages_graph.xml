@@ -138,7 +138,7 @@
     </fragment>
     <fragment
         android:id="@+id/editSettingsFragment"
-        android:name="com.dogukan.tellme.EditSettingsFragment"
+        android:name="com.dogukan.tellme.view.EditSettingsFragment"
         android:label="EditSettingsFragment" >
         <action
             android:id="@+id/action_editSettingsFragment_to_settingsFragment"
@@ -146,7 +146,7 @@
     </fragment>
     <fragment
         android:id="@+id/friendDetailFragment"
-        android:name="com.dogukan.tellme.FriendDetailFragment"
+        android:name="com.dogukan.tellme.view.FriendDetailFragment"
         android:label="FriendDetailFragment" >
         <action
             android:id="@+id/action_friendDetailFragment_to_chatLogFragment"
@@ -182,7 +182,7 @@
     </fragment>
     <fragment
         android:id="@+id/reViewSendImageFragment"
-        android:name="com.dogukan.tellme.ReViewSendImageFragment"
+        android:name="com.dogukan.tellme.view.ReViewSendImageFragment"
         android:label="ReViewSendImageFragment" >
         <action
             android:id="@+id/action_reViewSendImageFragment_to_chatLogFragment"
