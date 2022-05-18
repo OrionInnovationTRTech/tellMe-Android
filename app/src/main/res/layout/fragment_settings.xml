@@ -94,7 +94,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="10dp"
                             android:padding="2dp"
-                            android:text="User Name"
+                            android:text="@string/username"
                             android:textColor="@color/black"
                             android:textSize="15sp"
                             android:textStyle="normal" />
@@ -133,7 +133,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="10dp"
                             android:padding="2dp"
-                            android:text="Status"
+                            android:text="@string/status"
                             android:textColor="@color/black"
                             android:textSize="15sp"
                             android:textStyle="normal" />

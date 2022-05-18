@@ -52,7 +52,7 @@ class LatestMessagesFragment : Fragment() {
         adapter = LatestMessagesRVAdapter(lastestChatMessageList,userList)
 
         val activity = activity as? MainActivity
-        activity?.supportActionBar?.title = "Tell Me"
+        activity?.supportActionBar?.setTitle(R.string.app_name)
         activity?.supportActionBar?.setDisplayHomeAsUpEnabled(false)
         binding.recyclerView3.adapter = adapter
         observeLiveData()
@@ -111,7 +111,7 @@ class LatestMessagesFragment : Fragment() {
             binding.informationTV.visibility = View.VISIBLE
             it?.let {
                 if (it){
-                    binding.informationTV.text = "Mesaj Kutunuz Boş"
+                    binding.informationTV.setText(R.string.message_box_empty)
                 }
                 else{
                     binding.informationTV.text = ""

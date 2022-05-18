@@ -40,7 +40,7 @@ class EditSettingsFragment(var Which : Int) : BottomSheetDialogFragment() {
         }
 
         if (Which==1){
-            binding.ChangeTextView.setText("Change Your Name")
+            binding.ChangeTextView.setText(R.string.Change_name)
             binding.changedNameTV.setText(viewModel.getUser(AppUtil.getUID()!!).value?.username)
             binding.changedNameTV.filters += InputFilter.LengthFilter(20)
             binding.SaveButton.setOnClickListener{
@@ -52,7 +52,7 @@ class EditSettingsFragment(var Which : Int) : BottomSheetDialogFragment() {
             Log.d("Which", "1")
         }
         else if (Which==2){
-            binding.ChangeTextView.setText("Change Your Status")
+            binding.ChangeTextView.setText(R.string.Change_status)
             binding.changedNameTV.setText(viewModel.getUser(AppUtil.getUID()!!).value?.status)
             binding.changedNameTV.filters += InputFilter.LengthFilter(118)
             binding.SaveButton.setOnClickListener{

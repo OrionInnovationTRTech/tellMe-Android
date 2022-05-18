@@ -229,11 +229,11 @@ class ChatLogFragment : Fragment() , ChatLogRVAdapter.RecyclerDetails {
                 binding.include.imageActiveState.setImageResource(R.drawable.greencircle)
                 addition.picassoUseIt(hisImage,binding.include.profileImage)
                 binding.include.username.text = myName
-                binding.include.activeState.text = "online"
+                binding.include.activeState.setText(R.string.online)
 
             }
             else if(!it2 && viewModel.getIstypingData().value==false){
-                binding.include.activeState.text = "offline"
+                binding.include.activeState.setText(R.string.offline)
                 binding.include.imageActiveState.setImageResource(R.drawable.redcircle)
                 addition.picassoUseIt(hisImage,binding.include.profileImage)
                 binding.include.username.text = myName
@@ -246,7 +246,7 @@ class ChatLogFragment : Fragment() , ChatLogRVAdapter.RecyclerDetails {
             viewModel.getIsTyping(ToID)
             viewModel.getIstypingData()
             if (it){
-                binding.include.activeState.text = "typing"
+                binding.include.activeState.setText(R.string.typing)
             }
         })
     }
@@ -265,13 +265,13 @@ class ChatLogFragment : Fragment() , ChatLogRVAdapter.RecyclerDetails {
     override fun onClickDeleteImageViewReciever(holder: ChatLogRVAdapter.RecieverViewHolder) {
         viewModel.getAllMessage()
         viewModel.deleteMessage(ToID,"message deleted",chatMessageList,holder.position)
-        holder.recievermessage.text = "message deleted"
+        holder.recievermessage.setText(R.string.message_deleted)
         holder.recieverTrashMessage.visibility = View.GONE
     }
     override fun onClickDeleteImageViewSender(holder: ChatLogRVAdapter.SenderViewHolder) {
         viewModel.getAllMessage()
         viewModel.deleteMessage(ToID,"message deleted",chatMessageList,holder.position)
-        holder.sendermessage.text = "message deleted"
+        holder.sendermessage.setText(R.string.message_deleted)
         holder.senderTrashMessage.visibility = View.GONE
 
     }

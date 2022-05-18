@@ -64,8 +64,8 @@ class SettingsFragment : Fragment() {
                 binding.imgProfile.setImageDrawable(bitmapDrawable)
                 selectedPhotoUri = it
                 val alertDialog = AlertDialog.Builder(context)
-                alertDialog.setMessage("Do you want to change your picture?")
-                alertDialog.setTitle("change picture")
+                alertDialog.setMessage(R.string.change_picture)
+                alertDialog.setTitle(R.string.change_picture_title)
                 alertDialog.setPositiveButton("Yes",DialogInterface.OnClickListener{ dialog, _ ->
                     viewModel.changePhoto(selectedPhotoUri!!)
                     dialog.cancel()

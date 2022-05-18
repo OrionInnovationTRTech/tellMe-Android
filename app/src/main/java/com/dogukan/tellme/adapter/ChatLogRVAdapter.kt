@@ -99,7 +99,7 @@ class ChatLogRVAdapter(private val chatmessages : ArrayList<ChatMessage> ,privat
                     holder.senderTrashMessage.setOnClickListener {
                             recyclerDetails.onClickDeleteImageViewSender(holder)
                             holder.senderTrashMessage.visibility = View.GONE
-                            holder.sendermessage.text = "Message Deleted."
+                            holder.sendermessage.setText(R.string.message_deleted)
 
                     }
 
@@ -131,9 +131,9 @@ class ChatLogRVAdapter(private val chatmessages : ArrayList<ChatMessage> ,privat
 
                 if (chatmessages[position].isSeen){
 
-                    holder.senderIsSeen.text = "seen"
+                    holder.senderIsSeen.setText(R.string.seen)
                 }else{
-                    holder.senderIsSeen.text = "delivered"
+                    holder.senderIsSeen.setText(R.string.delivered)
                 }
             }
             else{
@@ -164,7 +164,7 @@ class ChatLogRVAdapter(private val chatmessages : ArrayList<ChatMessage> ,privat
                 holder.recieverTrashMessage.setOnClickListener {
                     recyclerDetails.onClickDeleteImageViewReciever(holder as RecieverViewHolder)
                     holder.recieverTrashMessage.visibility = View.GONE
-                    holder.recievermessage.text = "Message Deleted."
+                    holder.recievermessage.setText(R.string.message_deleted)
 
                 }
 
