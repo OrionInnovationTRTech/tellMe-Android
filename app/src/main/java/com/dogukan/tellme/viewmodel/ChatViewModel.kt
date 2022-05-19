@@ -5,6 +5,7 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.dogukan.tellme.databinding.FragmentChatLogBinding
 import com.dogukan.tellme.models.ChatMessage
 import com.dogukan.tellme.repository.ChatRepository
@@ -42,6 +43,9 @@ class ChatViewModel() : ViewModel(), ChatRepositoryI {
         chatRepository.listenForMessage(ToID)
 
     }
+    fun getMessageFirebaseAll(ToID : String){
+        chatRepository.listenForMessageAll(ToID)
+    }
     fun getIsSeenStatus() : LiveData<Boolean>{
         return isSeen
     }
@@ -59,7 +63,6 @@ class ChatViewModel() : ViewModel(), ChatRepositoryI {
         chatRepository.seenMessage(toID)
     }
     override fun showListOfMessage(messageList: ArrayList<ChatMessage>) {
-
         message.value = messageList
     }
 

@@ -2,6 +2,7 @@ package com.dogukan.tellme.repository
 
 import android.net.Uri
 import android.util.Log
+import androidx.lifecycle.MutableLiveData
 import com.dogukan.tellme.databinding.FragmentChatLogBinding
 import com.dogukan.tellme.models.ChatMessage
 import com.dogukan.tellme.util.AppUtil
@@ -20,11 +21,14 @@ class ChatRepository(ChatRepositoryI: ChatRepositoryI) {
     private var chatMessageList = ArrayList<ChatMessage>()
     private  var AppUtil = AppUtil()
 
-     fun listenForMessage(toID : String){
+     fun listenForMessageAll(toID : String){
         val ref = FirebaseDatabase.getInstance().getReference("/user-messages/${AppUtil.getUID()}/$toID")
+         chatMessageList.clear()
         ref.addChildEventListener(object : ChildEventListener {
             override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
+                //if(chatMessageList)
                 val chatMessage = snapshot.getValue(ChatMessage::class.java)
+
                 if (chatMessage != null) {
                     chatMessageList.add(chatMessage)
                     chatRepositoryI?.showListOfMessage(chatMessageList)
@@ -40,15 +44,96 @@ class ChatRepository(ChatRepositoryI: ChatRepositoryI) {
             }
         })
     }
+    fun listenForMessage(toID : String){
+        val ref = FirebaseDatabase.getInstance().getReference("/user-messages/${AppUtil.getUID()}/$toID")
+        //chatMessageList.clear()
+        ref.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val chatMessage = snapshot.getValue(ChatMessage::class.java)
+                if (chatMessage != null) {
+
+                    chatMessageList.add(chatMessage)
+                    chatRepositoryI?.showListOfMessage(chatMessageList)
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+
+        })
+    }
     fun deleteMessage(toID : String, message : String, chatMessageList : ArrayList<ChatMessage>, position : Int){
         val ref = FirebaseDatabase.getInstance().getReference("/user-messages/${AppUtil.getUID()}/$toID")
         val toref = FirebaseDatabase.getInstance().getReference("/user-messages/$toID/${AppUtil.getUID()}")
         val latestMessageRef = FirebaseDatabase.getInstance().getReference("/latest-messages/${AppUtil.getUID()}/$toID")
         val latestMessageToRef = FirebaseDatabase.getInstance().getReference("/latest-messages/$toID/${AppUtil.getUID()}")
-        ref.removeValue()
-        toref.removeValue()
-        latestMessageRef.removeValue()
-        latestMessageToRef.removeValue()
+
+        toref.addChildEventListener(object : ChildEventListener{
+            override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
+                val chatMessage = snapshot.getValue(ChatMessage::class.java)
+                if (chatMessage?.text==chatMessageList[position].text){
+                    toref.child(snapshot.key!!).removeValue()
+                }
+            }
+
+            override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
+                val chatMessage = snapshot.getValue(ChatMessage::class.java)
+                if (chatMessage?.text==chatMessageList[position].text){
+                    toref.child(snapshot.key!!).removeValue()
+                }
+            }
+
+            override fun onChildRemoved(snapshot: DataSnapshot) {
+                val chatMessage = snapshot.getValue(ChatMessage::class.java)
+                if (chatMessage?.text==chatMessageList[position].text){
+                    toref.child(snapshot.key!!).removeValue()
+                }
+            }
+
+            override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {
+
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+
+            }
+
+        })
+
+        ref.addChildEventListener(object : ChildEventListener{
+            override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
+                val chatMessage = snapshot.getValue(ChatMessage::class.java)
+                if (chatMessageList.size > 1 && chatMessage?.text==chatMessageList[chatMessageList.size-2].text){
+
+                    latestMessageRef.setValue(chatMessage)
+                    latestMessageToRef.setValue(chatMessage)
+
+                }
+                if(chatMessageList.size==1){
+                    latestMessageRef.removeValue()
+                    latestMessageToRef.removeValue()
+                }
+
+            }
+
+            override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
+            }
+
+            override fun onChildRemoved(snapshot: DataSnapshot) {
+            }
+
+            override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+            }
+
+        })
+
+
+
+        ref.child(chatMessageList[position].id).removeValue()
         chatRepositoryI?.deleteMessage(true)
     }
 

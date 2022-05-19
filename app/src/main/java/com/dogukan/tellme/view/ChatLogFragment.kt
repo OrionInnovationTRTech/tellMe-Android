@@ -12,6 +12,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleObserver
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -92,7 +95,7 @@ class ChatLogFragment : Fragment() , ChatLogRVAdapter.RecyclerDetails {
             ActiveState = ChatLogFragmentArgs.fromBundle(it).activeState
             email = ChatLogFragmentArgs.fromBundle(it).email
             token = ChatLogFragmentArgs.fromBundle(it).token
-            ToID.let { it1 -> viewModel.getMessageFirebase(it1) }
+            ToID.let { it1 -> viewModel.getMessageFirebaseAll(it1) }
             sendMessageClick()
             viewModel.getActiveStateFirebase(ToID)
             viewModel.getActiveState()
@@ -199,18 +202,20 @@ class ChatLogFragment : Fragment() , ChatLogRVAdapter.RecyclerDetails {
         mainActivityView.activeState("online")
     }
     private fun observeLiveData(){
+
         viewModel.message.observe(viewLifecycleOwner, Observer {
-            binding.sendmassageBtn.isEnabled = binding.sendmassegeTV.text != null
-            binding.recyclerView2.visibility = View.VISIBLE
+
+            //viewModel.getMessageFirebaseAll(ToID)
             adapter.ChatMessageUpdate(it)
 
+            binding.sendmassageBtn.isEnabled = binding.sendmassegeTV.text != null
+            binding.recyclerView2.visibility = View.VISIBLE
             binding.recyclerView2.scrollToPosition(chatMessageList.count()-1)
 
         })
         viewModel.deleteMessage.observe(viewLifecycleOwner, Observer {
             if (it){
-                Log.d("DeleteMessageObserver",it.toString())
-                viewModel.getAllMessage()
+
             }
             else{
                 Log.d("DeleteMessageObserver",it.toString())

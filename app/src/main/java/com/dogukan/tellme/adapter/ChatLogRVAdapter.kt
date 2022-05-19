@@ -190,13 +190,18 @@ class ChatLogRVAdapter(private val chatmessages : ArrayList<ChatMessage> ,privat
     override fun getItemCount(): Int {
         return chatmessages.size
     }
+
     @SuppressLint("NotifyDataSetChanged")
     fun ChatMessageUpdate(NewUserList : List<ChatMessage>){
         chatmessages.clear()
         if (chatmessages.isEmpty()){
-            chatmessages.addAll(NewUserList)
-            notifyDataSetChanged()
+            NewUserList.forEach{
+                chatmessages.add(it)
+            }
+
+
         }
+        notifyDataSetChanged()
     }
 
 

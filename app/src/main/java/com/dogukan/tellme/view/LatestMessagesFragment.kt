@@ -137,7 +137,7 @@ class LatestMessagesFragment : Fragment() {
         // Inflate the layout for this fragment
         (activity as AppCompatActivity).supportActionBar?.show()
         setHasOptionsMenu(true)
-        observeLiveData()
+        //observeLiveData()
         binding = FragmentLatestMessagesBinding.inflate(layoutInflater)
         return binding.root
     }
