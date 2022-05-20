@@ -72,23 +72,28 @@ class ChatRepository(ChatRepositoryI: ChatRepositoryI) {
         toref.addChildEventListener(object : ChildEventListener{
             override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
                 val chatMessage = snapshot.getValue(ChatMessage::class.java)
-                if (chatMessage?.text==chatMessageList[position].text){
-                    toref.child(snapshot.key!!).removeValue()
-                }
+
+
+                    if (chatMessage?.text==chatMessageList[position].text){
+                        toref.child(snapshot.key!!).removeValue()
+                    }
+
+
             }
 
             override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
                 val chatMessage = snapshot.getValue(ChatMessage::class.java)
-                if (chatMessage?.text==chatMessageList[position].text){
-                    toref.child(snapshot.key!!).removeValue()
-                }
+                    if (chatMessage?.text==chatMessageList[position].text){
+                        toref.child(snapshot.key!!).removeValue()
+                    }
+
             }
 
             override fun onChildRemoved(snapshot: DataSnapshot) {
                 val chatMessage = snapshot.getValue(ChatMessage::class.java)
-                if (chatMessage?.text==chatMessageList[position].text){
-                    toref.child(snapshot.key!!).removeValue()
-                }
+                    if (chatMessage?.text==chatMessageList[position].text){
+                        toref.child(snapshot.key!!).removeValue()
+                    }
             }
 
             override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {
@@ -101,7 +106,7 @@ class ChatRepository(ChatRepositoryI: ChatRepositoryI) {
 
         })
 
-        ref.addChildEventListener(object : ChildEventListener{
+       /* ref.addChildEventListener(object : ChildEventListener{
             override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
                 val chatMessage = snapshot.getValue(ChatMessage::class.java)
                 if (chatMessageList.size > 1 && chatMessage?.text==chatMessageList[chatMessageList.size-2].text){
@@ -129,11 +134,12 @@ class ChatRepository(ChatRepositoryI: ChatRepositoryI) {
             override fun onCancelled(error: DatabaseError) {
             }
 
-        })
+        })*/
 
 
 
         ref.child(chatMessageList[position].id).removeValue()
+       // toref.child(chatMessageList[position].id).removeValue()
         chatRepositoryI?.deleteMessage(true)
     }
 

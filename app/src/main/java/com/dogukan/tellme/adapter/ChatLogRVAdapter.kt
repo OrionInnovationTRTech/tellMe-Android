@@ -28,9 +28,11 @@ import kotlin.time.Duration.Companion.minutes
 class ChatLogRVAdapter(private val chatmessages : ArrayList<ChatMessage> ,private val recyclerDetails: RecyclerDetails) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private var addition = Addition()
     private var appUtil = AppUtil()
+
     companion object{
         var SENDER_VIEW_TYPE = 1
         var RECEIVER_VIEW_TYPE = 2
+
     }
 
     class SenderViewHolder(itemView : View) : RecyclerView.ViewHolder(itemView){
@@ -93,13 +95,16 @@ class ChatLogRVAdapter(private val chatmessages : ArrayList<ChatMessage> ,privat
                             Log.d("OnLong", "Selam")
                             holder.senderTrashMessage.visibility = View.VISIBLE
 
+
                         }
                         return@setOnLongClickListener true
                     }
                     holder.senderTrashMessage.setOnClickListener {
                             recyclerDetails.onClickDeleteImageViewSender(holder)
+
                             holder.senderTrashMessage.visibility = View.GONE
                             holder.sendermessage.setText(R.string.message_deleted)
+
 
                     }
 
@@ -162,11 +167,11 @@ class ChatLogRVAdapter(private val chatmessages : ArrayList<ChatMessage> ,privat
                     return@setOnLongClickListener true
                 }
                 holder.recieverTrashMessage.setOnClickListener {
-                    recyclerDetails.onClickDeleteImageViewReciever(holder as RecieverViewHolder)
                     holder.recieverTrashMessage.visibility = View.GONE
                     holder.recievermessage.setText(R.string.message_deleted)
 
                 }
+                recyclerDetails.onClickDeleteImageViewReciever(holder)
 
             }
             //Message type image
@@ -195,11 +200,7 @@ class ChatLogRVAdapter(private val chatmessages : ArrayList<ChatMessage> ,privat
     fun ChatMessageUpdate(NewUserList : List<ChatMessage>){
         chatmessages.clear()
         if (chatmessages.isEmpty()){
-            NewUserList.forEach{
-                chatmessages.add(it)
-            }
-
-
+           chatmessages.addAll(NewUserList)
         }
         notifyDataSetChanged()
     }

@@ -63,11 +63,12 @@ class NewMessagesFragment : Fragment() {
     private fun SearchViewOnQuery(){
         binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener{
             override fun onQueryTextSubmit(query: String?): Boolean {
-                TODO("Not yet implemented")
+              return false
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
-                TODO("Not yet implemented")
+                adapter.filter.filter(newText)
+               return false
             }
 
         })
@@ -79,6 +80,17 @@ class NewMessagesFragment : Fragment() {
         viewModel.getUser()
         viewModel.getAllUsers()
         adapter = NewMessagesRVAdapter(newMessagesList)
+        binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener{
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                return false
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                adapter.filter.filter(newText)
+                return false
+            }
+
+        })
         binding.recyclerView4.adapter = adapter
         observeLiveData()
         binding.swipeRefleshLayoutNewMessages.setOnRefreshListener {

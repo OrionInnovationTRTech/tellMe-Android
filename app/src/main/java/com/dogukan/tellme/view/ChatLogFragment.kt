@@ -54,6 +54,7 @@ class ChatLogFragment : Fragment() , ChatLogRVAdapter.RecyclerDetails {
     private  var AppUtil = AppUtil()
     private  var addition = Addition()
     var selectedPhotoUri : Uri?=null
+    private var isDeleted = false
 
 
     private val viewModel : ChatViewModel by viewModels()
@@ -203,25 +204,28 @@ class ChatLogFragment : Fragment() , ChatLogRVAdapter.RecyclerDetails {
     }
     private fun observeLiveData(){
 
-        viewModel.message.observe(viewLifecycleOwner, Observer {
+        viewModel.message.observe(viewLifecycleOwner, Observer { list ->
 
             //viewModel.getMessageFirebaseAll(ToID)
-            adapter.ChatMessageUpdate(it)
+            adapter.ChatMessageUpdate(list)
 
             binding.sendmassageBtn.isEnabled = binding.sendmassegeTV.text != null
             binding.recyclerView2.visibility = View.VISIBLE
             binding.recyclerView2.scrollToPosition(chatMessageList.count()-1)
+            viewModel.deleteMessage.observe(viewLifecycleOwner, Observer {
+                if (it){
+                   // isDeleted=true
+
+
+
+                }else{
+                    //isDeleted=true
+                    //adapter.ChatMessageUpdate(list)
+                }
+            })
 
         })
-        viewModel.deleteMessage.observe(viewLifecycleOwner, Observer {
-            if (it){
 
-            }
-            else{
-                Log.d("DeleteMessageObserver",it.toString())
-                viewModel.getAllMessage()
-            }
-        })
         viewModel.imageUpload.observe(viewLifecycleOwner, Observer {
 
             viewModel.getAllMessage()
@@ -268,16 +272,17 @@ class ChatLogFragment : Fragment() , ChatLogRVAdapter.RecyclerDetails {
         }
     }
     override fun onClickDeleteImageViewReciever(holder: ChatLogRVAdapter.RecieverViewHolder) {
-        viewModel.getAllMessage()
-        viewModel.deleteMessage(ToID,"message deleted",chatMessageList,holder.position)
-        holder.recievermessage.setText(R.string.message_deleted)
-        holder.recieverTrashMessage.visibility = View.GONE
+        if (isDeleted)
+            holder.itemView.visibility=View.GONE
     }
     override fun onClickDeleteImageViewSender(holder: ChatLogRVAdapter.SenderViewHolder) {
         viewModel.getAllMessage()
         viewModel.deleteMessage(ToID,"message deleted",chatMessageList,holder.position)
-        holder.sendermessage.setText(R.string.message_deleted)
+
+
+        holder.itemView.visibility=View.GONE
         holder.senderTrashMessage.visibility = View.GONE
+       // isDeleted = true
 
     }
     override fun showIsSeenSender(holder: ChatLogRVAdapter.SenderViewHolder,chatMessage : ArrayList<ChatMessage>,p: Int) {
