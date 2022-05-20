@@ -57,11 +57,11 @@ class NewMessagesRVAdapter(private val userList: ArrayList<Users>) : RecyclerVie
         holder.itemView.setOnClickListener {
             val action = NewMessagesFragmentDirections.actionNewMessagesFragmentToChatLogFragment(
                 position,
-                userList[position].uid,
-                userList[position].username,
-                userList[position].profileImageURL,
-                userList[position].status,userList[position].activeState,userList[position].Email,
-                userList[position].token!!
+                userFilterList[position].uid,
+                userFilterList[position].username,
+                userFilterList[position].profileImageURL,
+                userFilterList[position].status,userFilterList[position].activeState,userFilterList[position].Email,
+                userFilterList[position].token!!
             )
             Navigation.findNavController(it).navigate(action)
         }
