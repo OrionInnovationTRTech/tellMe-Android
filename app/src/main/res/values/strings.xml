@@ -20,7 +20,7 @@
     <string name="back_register">Back to registration</string>
     <string name="chat">Chat</string>
     <string name="Settings">Settings</string>
-
+    <string name="Search_hint">Enter the friend name</string>
     <string name="Change_name">Change your name</string>
     <string name="Change_status">Change your status</string>
     <string name="Cancel">Cancel</string>

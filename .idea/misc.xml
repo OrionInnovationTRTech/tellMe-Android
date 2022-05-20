@@ -15,6 +15,7 @@
         <entry key="app/src/main/res/drawable/rounded_button.xml" value="0.168" />
         <entry key="app/src/main/res/drawable/rounded_edittext_register_login.xml" value="0.168" />
         <entry key="app/src/main/res/drawable/rounded_select_photo_button.xml" value="0.2185" />
+        <entry key="app/src/main/res/drawable/search_view_background.xml" value="0.1745" />
         <entry key="app/src/main/res/layout/activity_chat_log.xml" value="0.24270833333333333" />
         <entry key="app/src/main/res/layout/activity_latest_messages.xml" value="0.271875" />
         <entry key="app/src/main/res/layout/activity_login.xml" value="0.25" />

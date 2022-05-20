@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     >
+
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipeRefleshLayoutNewMessages"
         android:layout_width="match_parent"
@@ -12,19 +13,32 @@
             android:layout_height="match_parent"
             tools:context=".view.NewMessagesFragment">
 
+            <SearchView
+                android:id="@+id/searchView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="16dp"
+                android:background="@drawable/rounded_edittext_register_login"
+                android:iconifiedByDefault="false"
+                android:layerType="none"
+                android:queryHint="@string/Search_hint"
+                app:layout_constraintBottom_toTopOf="@+id/recyclerView4"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerView4"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:layout_marginStart="1dp"
-                android:layout_marginTop="1dp"
                 android:layout_marginEnd="1dp"
                 android:layout_marginBottom="1dp"
                 android:padding="5dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toBottomOf="@+id/searchView" />
             <TextView
                 android:id="@+id/new_informationTV"
                 android:layout_width="wrap_content"

@@ -25,4 +25,5 @@
     <string name="Change_status">Durumunu değiştir</string>
     <string name="Cancel">İptal</string>
     <string name="Save">Kaydet</string>
+    <string name="Search_hint">Arkadaşının ismini gir</string>
 </resources>
