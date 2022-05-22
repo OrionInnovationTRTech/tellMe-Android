@@ -48,11 +48,12 @@ class NewMessagesRVAdapter(private val userList: ArrayList<Users>) : RecyclerVie
 
         addition.picassoUseIt(userList[position].profileImageURL,holder.itemImage,holder.itemProgressBar)
 */
-        holder.itemProgressBar.visibility = View.VISIBLE
+
         holder.itemTitle.text = userFilterList[position].username
         holder.itemStatus.text = userFilterList[position].status
 
         addition.picassoUseIt(userFilterList[position].profileImageURL,holder.itemImage,holder.itemProgressBar)
+        holder.itemProgressBar.visibility = View.GONE
 
         holder.itemView.setOnClickListener {
             val action = NewMessagesFragmentDirections.actionNewMessagesFragmentToChatLogFragment(
@@ -60,7 +61,9 @@ class NewMessagesRVAdapter(private val userList: ArrayList<Users>) : RecyclerVie
                 userFilterList[position].uid,
                 userFilterList[position].username,
                 userFilterList[position].profileImageURL,
-                userFilterList[position].status,userFilterList[position].activeState,userFilterList[position].Email,
+                userFilterList[position].status,
+                userFilterList[position].activeState,
+                userFilterList[position].Email,
                 userFilterList[position].token!!
             )
             Navigation.findNavController(it).navigate(action)

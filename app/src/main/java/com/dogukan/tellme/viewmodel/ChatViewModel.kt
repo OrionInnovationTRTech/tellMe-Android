@@ -1,17 +1,24 @@
 package com.dogukan.tellme.viewmodel
 
+import android.app.Application
 import android.net.Uri
 import android.util.Log
+import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.dogukan.tellme.databinding.FragmentChatLogBinding
 import com.dogukan.tellme.models.ChatMessage
+import com.dogukan.tellme.models.Users
 import com.dogukan.tellme.repository.ChatRepository
 import com.dogukan.tellme.repository.ChatRepositoryI
+import com.dogukan.tellme.service.ChatMessageDatabase
+import com.dogukan.tellme.service.UsersDatabase
+import com.dogukan.tellme.util.SpecialSharedPreferences
+import kotlinx.coroutines.launch
 
-class ChatViewModel() : ViewModel(), ChatRepositoryI {
+class ChatViewModel(application: Application) : BaseViewModel(application), ChatRepositoryI {
     private var chatRepository = ChatRepository(this)
     val message = MutableLiveData<List<ChatMessage>>()
     val activeState = MutableLiveData<Boolean>()
@@ -19,6 +26,8 @@ class ChatViewModel() : ViewModel(), ChatRepositoryI {
     val isTyping = MutableLiveData<Boolean>()
     val imageUpload = MutableLiveData<Boolean>()
     val deleteMessage = MutableLiveData<Boolean>()
+    private val specialSharedPreferences = SpecialSharedPreferences(getApplication())
+    private var updateTimeValue = 5 * 60 * 1000 * 1000 * 1000L
 
     fun setIsTyping(isTyping: String){
         chatRepository.setActiveTyping(isTyping)
@@ -44,7 +53,20 @@ class ChatViewModel() : ViewModel(), ChatRepositoryI {
 
     }
     fun getMessageFirebaseAll(ToID : String){
-        chatRepository.listenForMessageAll(ToID)
+        val getTime = specialSharedPreferences.getTime()
+        if (getTime !=null && getTime!=0L && System.nanoTime()-getTime<updateTimeValue){
+            //get SqLite
+            getDataSQlite(ToID)
+            Toast.makeText(getApplication(),"Roomdan aldık" , Toast.LENGTH_LONG).show()
+        }
+        else{
+            //get Firebase
+            chatRepository.listenForMessageAll(ToID)
+            getAllMessage().value?.let { saveSQLite(it) }
+            Toast.makeText(getApplication(),"Firebase aldık" , Toast.LENGTH_LONG).show()
+
+        }
+
     }
     fun getIsSeenStatus() : LiveData<Boolean>{
         return isSeen
@@ -92,5 +114,23 @@ class ChatViewModel() : ViewModel(), ChatRepositoryI {
 
     override fun sendImage(isUpload: Boolean) {
         imageUpload.value = isUpload
+    }
+    private fun saveSQLite(chatMessage : List<ChatMessage>) {
+        launch {
+            val dao = ChatMessageDatabase(getApplication()).ChatMessageDAO()
+            dao.deleteAllChatMessage()
+            dao.insertAllMessage(*chatMessage.toTypedArray())
+        }
+        specialSharedPreferences.saveTime(System.nanoTime())
+    }
+    private fun getDataSQlite(ToID: String){
+        launch {
+            val chatMessage = ChatMessageDatabase(getApplication()).ChatMessageDAO().getAllChatMessage()
+            if (chatMessage.isEmpty()){
+                chatRepository.listenForMessageAll(ToID)
+                getAllMessage().value?.let { saveSQLite(it) }
+            }
+            message.value = chatMessage
+        }
     }
 }
