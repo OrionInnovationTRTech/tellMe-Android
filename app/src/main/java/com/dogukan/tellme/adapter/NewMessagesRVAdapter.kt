@@ -41,20 +41,10 @@ class NewMessagesRVAdapter(private val userList: ArrayList<Users>) : RecyclerVie
         return userFilterList.size
     }
     override fun onBindViewHolder(holder: NewMessageViewHolder, position: Int){
-        /*
-        holder.itemProgressBar.visibility = View.VISIBLE
-        holder.itemTitle.text = userList[position].username
-        holder.itemStatus.text = userList[position].status
-
-        addition.picassoUseIt(userList[position].profileImageURL,holder.itemImage,holder.itemProgressBar)
-*/
-
         holder.itemTitle.text = userFilterList[position].username
         holder.itemStatus.text = userFilterList[position].status
-
         addition.picassoUseIt(userFilterList[position].profileImageURL,holder.itemImage,holder.itemProgressBar)
         holder.itemProgressBar.visibility = View.GONE
-
         holder.itemView.setOnClickListener {
             val action = NewMessagesFragmentDirections.actionNewMessagesFragmentToChatLogFragment(
                 position,

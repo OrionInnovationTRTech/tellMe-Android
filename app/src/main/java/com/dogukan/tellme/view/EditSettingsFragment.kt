@@ -47,6 +47,7 @@ class EditSettingsFragment(var Which : Int) : BottomSheetDialogFragment() {
 
                 val userName = binding.changedNameTV.text.toString()
                 viewModel.changeUserName(userName)
+                viewModel.getUser(AppUtil.getUID()!!)
                 this.dismiss()
             }
             Log.d("Which", "1")
@@ -58,6 +59,7 @@ class EditSettingsFragment(var Which : Int) : BottomSheetDialogFragment() {
             binding.SaveButton.setOnClickListener{
                 val status = binding.changedNameTV.text.toString()
                 viewModel.changeStatus(status)
+                viewModel.getUser(AppUtil.getUID()!!)
                 this.dismiss()
             }
             Log.d("Which", "2")

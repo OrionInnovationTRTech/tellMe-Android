@@ -27,7 +27,7 @@ class ChatViewModel(application: Application) : BaseViewModel(application), Chat
     val imageUpload = MutableLiveData<Boolean>()
     val deleteMessage = MutableLiveData<Boolean>()
     private val specialSharedPreferences = SpecialSharedPreferences(getApplication())
-    private var updateTimeValue = 5 * 60 * 1000 * 1000 * 1000L
+    private var updateTimeValue = 0.05 * 60 * 1000 * 1000 * 1000L
 
     fun setIsTyping(isTyping: String){
         chatRepository.setActiveTyping(isTyping)
@@ -54,16 +54,22 @@ class ChatViewModel(application: Application) : BaseViewModel(application), Chat
     }
     fun getMessageFirebaseAll(ToID : String){
         val getTime = specialSharedPreferences.getTime()
+
         if (getTime !=null && getTime!=0L && System.nanoTime()-getTime<updateTimeValue){
-            //get SqLite
-            getDataSQlite(ToID)
-            Toast.makeText(getApplication(),"Roomdan aldık" , Toast.LENGTH_LONG).show()
+            //get sql
+            chatRepository.listenForMessageAll(ToID)
+            getAllMessage().value?.let { saveSQLite(it) }
+            if (getAllMessage().value?.isEmpty()==true){
+                getDataSQlite(ToID)
+            }
+            Log.d("Tag3","Girdi1")
+
         }
         else{
             //get Firebase
+            Log.d("Tag3","Girdi2")
             chatRepository.listenForMessageAll(ToID)
             getAllMessage().value?.let { saveSQLite(it) }
-            Toast.makeText(getApplication(),"Firebase aldık" , Toast.LENGTH_LONG).show()
 
         }
 
@@ -125,8 +131,13 @@ class ChatViewModel(application: Application) : BaseViewModel(application), Chat
     }
     private fun getDataSQlite(ToID: String){
         launch {
+            if (getAllMessage().value?.isEmpty() == true){
+                chatRepository.listenForMessageAll(ToID)
+                getAllMessage().value?.let { saveSQLite(it) }
+            }
             val chatMessage = ChatMessageDatabase(getApplication()).ChatMessageDAO().getAllChatMessage()
             if (chatMessage.isEmpty()){
+                getMessageFirebase(ToID)
                 chatRepository.listenForMessageAll(ToID)
                 getAllMessage().value?.let { saveSQLite(it) }
             }

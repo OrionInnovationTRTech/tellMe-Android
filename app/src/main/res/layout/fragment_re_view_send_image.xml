@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <LinearLayout
         android:layout_width="match_parent"
-        android:background="@color/black"
+        android:background="#3E3E3E"
         android:orientation="vertical"
         android:layout_height="match_parent"
         tools:context=".view.ReViewSendImageFragment">
@@ -40,7 +40,8 @@
         <com.jsibbold.zoomage.ZoomageView
             android:id="@+id/sendImageView"
             android:layout_width="match_parent"
-            android:layout_height="475dp"
+            android:layout_height="400dp"
+            android:padding="20dp"
             android:src="@drawable/images">
 
         </com.jsibbold.zoomage.ZoomageView>
@@ -50,12 +51,13 @@
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_gravity="end|bottom"
-            android:layout_marginRight="10dp"
-            android:backgroundTint="@color/orange"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="10dp"
+            android:backgroundTint="@color/light_orange"
 
             android:src="@drawable/send"
             app:fabCustomSize="50dp"
-            app:fabSize="normal">
+            app:fabSize="auto">
 
         </com.google.android.material.floatingactionbutton.FloatingActionButton>
     </LinearLayout>

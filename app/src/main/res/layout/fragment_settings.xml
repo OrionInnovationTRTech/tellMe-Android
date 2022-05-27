@@ -38,14 +38,13 @@
                     <de.hdodenhof.circleimageview.CircleImageView
                         android:id="@+id/imgProfile"
                         imageUrl="@{userModel.profileImageURL}"
-
                         android:layout_width="150dp"
                         android:layout_height="150dp"
                         android:layout_gravity="center" />
 
                     <ProgressBar
                         android:id="@+id/settings_progress_bar"
-
+                        android:theme="@style/ProgressBarTheme"
                         android:layout_width="40dp"
                         android:layout_height="40dp"
                         app:layout_anchor="@+id/imgProfile"
@@ -55,12 +54,12 @@
 
                     <ImageView
                         android:id="@+id/imgPickImage"
-                        android:layout_width="70dp"
-                        android:layout_height="70dp"
-                        android:src="@drawable/upload"
-                        app:layout_anchor="@id/imgProfile"
-                        app:layout_anchorGravity="end|center"
-                        app:tint="@color/black" />
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+
+                        android:src="@drawable/changepic"
+                        app:layout_anchor="@+id/imgProfile"
+                        app:layout_anchorGravity="end|bottom" />
                 </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
 

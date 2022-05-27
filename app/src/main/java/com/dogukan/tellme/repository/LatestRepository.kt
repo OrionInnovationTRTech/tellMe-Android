@@ -95,7 +95,7 @@ class LatestRepository(latestRepositoryI: LatestRepositoryI) {
     }
     fun refreshRecyclerViewMessages(){
         latestMessageList.clear()
-        latestMessagesMap.values.forEach {
+        latestMessagesMap.values.reversed().forEach {
             latestMessageList.add(it)
 
         }
@@ -103,7 +103,7 @@ class LatestRepository(latestRepositoryI: LatestRepositoryI) {
     }
     fun refreshRecyclerViewMessagesInUser(){
         latestUserInfoList.clear()
-        latestUserInfoListMap.values.forEach {
+        latestUserInfoListMap.values.reversed().forEach {
             latestUserInfoList.add(it)
         }
         latestRepositoryI?.showUserInfoLatestMessage(latestUserInfoList)

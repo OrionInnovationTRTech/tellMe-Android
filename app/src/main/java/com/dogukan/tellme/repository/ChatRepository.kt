@@ -19,6 +19,7 @@ import kotlin.time.Duration.Companion.nanoseconds
 class ChatRepository(ChatRepositoryI: ChatRepositoryI) {
     private var chatRepositoryI : ChatRepositoryI ?= ChatRepositoryI
     private var chatMessageList = ArrayList<ChatMessage>()
+    private val chatMessagesMap = HashMap<String, ChatMessage>()
     private  var AppUtil = AppUtil()
 
      fun listenForMessageAll(toID : String){
@@ -26,7 +27,6 @@ class ChatRepository(ChatRepositoryI: ChatRepositoryI) {
          chatMessageList.clear()
         ref.addChildEventListener(object : ChildEventListener {
             override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
-                //if(chatMessageList)
                 val chatMessage = snapshot.getValue(ChatMessage::class.java)
 
                 if (chatMessage != null) {
@@ -46,7 +46,7 @@ class ChatRepository(ChatRepositoryI: ChatRepositoryI) {
     }
     fun listenForMessage(toID : String){
         val ref = FirebaseDatabase.getInstance().getReference("/user-messages/${AppUtil.getUID()}/$toID")
-        //chatMessageList.clear()
+
         ref.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 val chatMessage = snapshot.getValue(ChatMessage::class.java)
@@ -105,39 +105,6 @@ class ChatRepository(ChatRepositoryI: ChatRepositoryI) {
             }
 
         })
-
-       /* ref.addChildEventListener(object : ChildEventListener{
-            override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
-                val chatMessage = snapshot.getValue(ChatMessage::class.java)
-                if (chatMessageList.size > 1 && chatMessage?.text==chatMessageList[chatMessageList.size-2].text){
-
-                    latestMessageRef.setValue(chatMessage)
-                    latestMessageToRef.setValue(chatMessage)
-
-                }
-                if(chatMessageList.size==1){
-                    latestMessageRef.removeValue()
-                    latestMessageToRef.removeValue()
-                }
-
-            }
-
-            override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
-            }
-
-            override fun onChildRemoved(snapshot: DataSnapshot) {
-            }
-
-            override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {
-            }
-
-            override fun onCancelled(error: DatabaseError) {
-            }
-
-        })*/
-
-
-
         ref.child(chatMessageList[position].id).removeValue()
        // toref.child(chatMessageList[position].id).removeValue()
         chatRepositoryI?.deleteMessage(true)
@@ -151,19 +118,14 @@ class ChatRepository(ChatRepositoryI: ChatRepositoryI) {
             override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
                 val chatMessage = snapshot.getValue(ChatMessage::class.java)
                 if (chatMessage!=null){
-                    if (chatMessage.fromID.equals(toID) && chatMessage.ToID.equals(AppUtil.getUID()) && (!chatMessage.fromID.equals(AppUtil.getUID())) && (!chatMessage.ToID.equals(toID))){
+                    if (chatMessage.ToID == AppUtil.getUID()){
                         snapshot.ref.child("seen").setValue(true)
                         chatRepositoryI?.checkIsSeen(true)
                     }
                 }
             }
             override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
-                val chatMessage = snapshot.getValue(ChatMessage::class.java)
-                if (chatMessage?.fromID.equals(toID) && chatMessage?.ToID.equals(AppUtil.getUID()) && (!chatMessage?.fromID.equals(AppUtil.getUID())) && (!chatMessage?.ToID.equals(toID))){
-                    snapshot.ref.child("seen").setValue(true)
-                    chatRepositoryI?.checkIsSeen(true)
 
-                }
             }
             override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {
 
@@ -175,34 +137,7 @@ class ChatRepository(ChatRepositoryI: ChatRepositoryI) {
 
             }
         })
-        ref.addChildEventListener(object : ChildEventListener {
-            override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
-                val chatMessage = snapshot.getValue(ChatMessage::class.java)
-                if (chatMessage!=null){
-                    if (chatMessage.fromID.equals(toID) && chatMessage.ToID.equals(AppUtil.getUID()) && (!chatMessage.fromID.equals(AppUtil.getUID())) && (!chatMessage.ToID.equals(toID))){
-                        snapshot.ref.child("seen").setValue(true)
-                        chatRepositoryI?.checkIsSeen(true)
-                    }
-                }
-            }
-            override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
-                val chatMessage = snapshot.getValue(ChatMessage::class.java)
-                if (chatMessage?.fromID.equals(toID) && chatMessage?.ToID.equals(AppUtil.getUID()) && (!chatMessage?.fromID.equals(AppUtil.getUID())) && (!chatMessage?.ToID.equals(toID))){
-                    snapshot.ref.child("seen").setValue(true)
-                    chatRepositoryI?.checkIsSeen(true)
 
-                }
-            }
-            override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {
-
-            }
-            override fun onChildRemoved(snapshot: DataSnapshot) {
-
-            }
-            override fun onCancelled(error: DatabaseError) {
-
-            }
-        })
 
     }
 
@@ -305,6 +240,7 @@ class ChatRepository(ChatRepositoryI: ChatRepositoryI) {
         latestMessageToRef.setValue(chatMessage)
 
     }
+
 
 
 }

@@ -19,7 +19,7 @@ class UserListViewModel(application: Application) : BaseViewModel(application), 
     val informationMessage = MutableLiveData<Boolean>()
 
     private val specialSharedPreferences = SpecialSharedPreferences(getApplication())
-    private var updateTimeValue = 5 * 60 * 1000 * 1000 * 1000L
+    private var updateTimeValue = 0.1 * 60 * 1000 * 1000 * 1000L
     fun getAllUsers() : LiveData<List<Users>>{
         return users
     }
@@ -28,13 +28,11 @@ class UserListViewModel(application: Application) : BaseViewModel(application), 
         if (getTime !=null && getTime!=0L && System.nanoTime()-getTime<updateTimeValue){
             //get SqLite
             getDataSQlite()
-            Toast.makeText(getApplication(),"Roomdan aldık" ,Toast.LENGTH_LONG).show()
         }
         else{
             //get Firebase
             userRepository.getUserFirebase()
             getAllUsers().value?.let { saveSQLite(it) }
-            Toast.makeText(getApplication(),"Firebase aldık" ,Toast.LENGTH_LONG).show()
 
         }
 
@@ -42,6 +40,10 @@ class UserListViewModel(application: Application) : BaseViewModel(application), 
     private fun getDataSQlite(){
         launch {
             val userList = UsersDatabase(getApplication()).usersDao().getAllUser()
+            if (userList.isEmpty()){
+                userRepository.getUserFirebase()
+                getAllUsers().value?.let { saveSQLite(it) }
+            }
             users.value = userList
             informationMessage.value = userList.isEmpty()
             userLoading.value = false

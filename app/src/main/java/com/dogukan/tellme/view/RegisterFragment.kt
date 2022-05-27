@@ -3,13 +3,13 @@ package com.dogukan.tellme.view
 import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import android.os.Bundle
+import android.os.Handler
 import android.provider.MediaStore
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.activity.result.ActivityResultCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.navigation.Navigation
@@ -59,6 +59,9 @@ class RegisterFragment : Fragment() {
         val getImage = registerForActivityResult(
             ActivityResultContracts.GetContent()
         ) {
+            if(it==null){
+                return@registerForActivityResult
+            }
             val bitmap = MediaStore.Images.Media.getBitmap(context?.contentResolver, it)
             val bitmapDrawable = BitmapDrawable(bitmap)
             binding.registerCircleImageView.setImageDrawable(bitmapDrawable)
@@ -88,7 +91,6 @@ class RegisterFragment : Fragment() {
             }
 
         }
-            //goToLatestMessageFragment()
 
     }
     private fun performRegister(){
@@ -158,6 +160,8 @@ class RegisterFragment : Fragment() {
             ref.putFile(selectedPhotoUri!!)
             .addOnSuccessListener {
                 ref.downloadUrl.addOnSuccessListener {
+
+
                     saveUserToFirebaseDatabase(it.toString())
                     Log.d("RegisterActivityy", "Successfully uploaded image : $it")
                 }
@@ -168,6 +172,15 @@ class RegisterFragment : Fragment() {
         }
 
 
+    }
+    private fun showProgressBar(){
+        binding.RegisterEmailET.visibility=View.GONE
+        binding.RegisterPasswordET.visibility=View.GONE
+        binding.RegisterUserNameET.visibility=View.GONE
+        binding.alreadyAccountTV.visibility = View.GONE
+        binding.selectPhotobtn.visibility = View.GONE
+        binding.registerbtn.visibility = View.GONE
+        binding.registerProgressBar.visibility = View.VISIBLE
     }
     private fun saveUserToFirebaseDatabase(profileImageURL: String){
 
@@ -183,7 +196,12 @@ class RegisterFragment : Fragment() {
             )
             ref.setValue(user)
                 .addOnSuccessListener {
-                    goToLatestMessageFragment()
+                    showProgressBar()
+                    Handler().postDelayed(Runnable {
+                        // Code to start new activity and finish this one
+                        goToLatestMessageFragment()
+                    }, 1500L)
+
                 }
         }
 

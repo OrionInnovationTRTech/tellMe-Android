@@ -4,13 +4,13 @@ import android.os.Bundle
 import android.view.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentTransaction
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.dogukan.tellme.R
 import com.dogukan.tellme.adapter.LatestMessagesRVAdapter
-
 import com.dogukan.tellme.databinding.FragmentLatestMessagesBinding
 import com.dogukan.tellme.models.ChatMessage
 import com.dogukan.tellme.models.Users
@@ -44,6 +44,7 @@ class LatestMessagesFragment : Fragment() {
 
         binding.recyclerView3.layoutManager = linearLayoutManager
         viewModel.getUserInfo()
+        viewModel.currentUser()
         viewModel.listenForLatestMessages()
         viewModel.refreshRecyclerViewMessage()
         viewModel.refreshRecyclerViewUserInLatestMessage()
@@ -66,9 +67,7 @@ class LatestMessagesFragment : Fragment() {
                 }
                 R.id.settings ->{
                     val action = LatestMessagesFragmentDirections.actionLatestMessagesFragment2ToSettingsFragment()
-
                     view?.let { it1 -> Navigation.findNavController(it1).navigate(action) }
-                    //binding.bottomNavigation.selectedItemId =it.itemId
                     return@setOnItemSelectedListener true
                 }
 
@@ -137,7 +136,6 @@ class LatestMessagesFragment : Fragment() {
         // Inflate the layout for this fragment
         (activity as AppCompatActivity).supportActionBar?.show()
         setHasOptionsMenu(true)
-        //observeLiveData()
         binding = FragmentLatestMessagesBinding.inflate(layoutInflater)
         return binding.root
     }

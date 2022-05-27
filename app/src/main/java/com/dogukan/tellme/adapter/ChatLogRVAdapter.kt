@@ -1,7 +1,6 @@
 package com.dogukan.tellme.adapter
 
 import android.annotation.SuppressLint
-import android.media.Image
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -9,21 +8,15 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
-import androidx.annotation.NonNull
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.dogukan.tellme.R
 import com.dogukan.tellme.models.ChatMessage
-import com.dogukan.tellme.models.Users
 import com.dogukan.tellme.util.Addition
 import com.dogukan.tellme.util.AppUtil
 import com.google.firebase.auth.FirebaseAuth
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.collections.ArrayList
-import kotlin.time.Duration.Companion.hours
-import kotlin.time.Duration.Companion.minutes
 
 class ChatLogRVAdapter(private val chatmessages : ArrayList<ChatMessage> ,private val recyclerDetails: RecyclerDetails) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private var addition = Addition()
@@ -76,7 +69,7 @@ class ChatLogRVAdapter(private val chatmessages : ArrayList<ChatMessage> ,privat
             RECEIVER_VIEW_TYPE
         }
     }
-    @SuppressLint("SimpleDateFormat")
+    @SuppressLint("SimpleDateFormat", "NotifyDataSetChanged")
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         //Sender
         if (holder.itemViewType == SENDER_VIEW_TYPE) {
@@ -108,7 +101,7 @@ class ChatLogRVAdapter(private val chatmessages : ArrayList<ChatMessage> ,privat
 
                     }
 
-                    recyclerDetails.showIsSeenSender(holder,chatmessages,position)
+
 
                 }
                 //message type image
@@ -127,6 +120,14 @@ class ChatLogRVAdapter(private val chatmessages : ArrayList<ChatMessage> ,privat
                         }
                         return@setOnLongClickListener true
                     }
+                    holder.senderTrashMessage.setOnClickListener {
+                        recyclerDetails.onClickDeleteImageViewSender(holder)
+
+                        holder.senderTrashMessage.visibility = View.GONE
+                        holder.sendermessage.setText(R.string.message_deleted)
+
+
+                    }
                     recyclerDetails.showIsSeenSender(holder,chatmessages,position)
 
                 }
@@ -135,7 +136,6 @@ class ChatLogRVAdapter(private val chatmessages : ArrayList<ChatMessage> ,privat
                 holder.senderIsSeen.visibility = View.VISIBLE
 
                 if (chatmessages[position].isSeen){
-
                     holder.senderIsSeen.setText(R.string.seen)
                 }else{
                     holder.senderIsSeen.setText(R.string.delivered)
@@ -171,7 +171,7 @@ class ChatLogRVAdapter(private val chatmessages : ArrayList<ChatMessage> ,privat
                     holder.recievermessage.setText(R.string.message_deleted)
 
                 }
-                recyclerDetails.onClickDeleteImageViewReciever(holder)
+
 
             }
             //Message type image
@@ -188,6 +188,11 @@ class ChatLogRVAdapter(private val chatmessages : ArrayList<ChatMessage> ,privat
                         holder.recieverTrashImage.visibility = View.VISIBLE
                     }
                     return@setOnLongClickListener true
+                }
+                holder.recieverTrashMessage.setOnClickListener {
+                    holder.recieverTrashMessage.visibility = View.GONE
+                    holder.recievermessage.setText(R.string.message_deleted)
+
                 }
             }
         }
@@ -206,10 +211,12 @@ class ChatLogRVAdapter(private val chatmessages : ArrayList<ChatMessage> ,privat
     }
 
 
+
     interface RecyclerDetails{
         fun onClickDeleteImageViewReciever(holder: RecieverViewHolder)
         fun onClickDeleteImageViewSender(holder: SenderViewHolder)
         fun showIsSeenSender(holder: SenderViewHolder,chatMessage : ArrayList<ChatMessage>,p: Int)
+        fun showIsSeenReciever(holder: RecieverViewHolder,chatMessage : ArrayList<ChatMessage>,p: Int)
 
     }
 }

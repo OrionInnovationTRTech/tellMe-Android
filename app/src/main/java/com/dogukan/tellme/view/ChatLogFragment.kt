@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import androidx.activity.result.ActivityResultCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.ui.node.getOrAddAdapter
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -98,18 +99,19 @@ class ChatLogFragment : Fragment() , ChatLogRVAdapter.RecyclerDetails {
             token = ChatLogFragmentArgs.fromBundle(it).token
             ToID.let { it1 -> viewModel.getMessageFirebaseAll(it1) }
             sendMessageClick()
+            topBarClick()
             viewModel.getActiveStateFirebase(ToID)
             viewModel.getActiveState()
             viewModel.getIsTyping(ToID)
             viewModel.getIstypingData()
         }
         myID = AppUtil.getUID()!!
-        //viewModel.getAllMessage()
+        viewModel.getAllMessage()
         viewModel.checkIsSeenMessage(ToID)
         binding.recyclerView2.adapter = adapter
 
-        topBarClick()
 
+        backArrowClicked()
         cameraImageViewClick()
 
         observeLiveData()
@@ -165,11 +167,28 @@ class ChatLogFragment : Fragment() , ChatLogRVAdapter.RecyclerDetails {
 
         }
     }
+    private fun backArrowClicked(){
+        binding.include.backArrow.setOnClickListener{
+            val action = ChatLogFragmentDirections.actionChatLogFragmentToLatestMessagesFragment2()
+            Navigation.findNavController(it).navigate(action)
+        }
+    }
     private fun topBarClick(){
         //FriendDetailFragment'ına geçiş
         include.setOnClickListener {
-            val action = ChatLogFragmentDirections.actionChatLogFragmentToFriendDetailFragment(position,ToID,myName,hisImage,status,ActiveState,email)
-            Navigation.findNavController(it).navigate(action)
+            arguments?.let {bundle->
+                ToID = ChatLogFragmentArgs.fromBundle(bundle).toID
+                hisImage = ChatLogFragmentArgs.fromBundle(bundle).imageURL
+                myName = ChatLogFragmentArgs.fromBundle(bundle).username
+                position = ChatLogFragmentArgs.fromBundle(bundle).position
+                status = ChatLogFragmentArgs.fromBundle(bundle).status
+                ActiveState = ChatLogFragmentArgs.fromBundle(bundle).activeState
+                email = ChatLogFragmentArgs.fromBundle(bundle).email
+                token = ChatLogFragmentArgs.fromBundle(bundle).token
+                val action = ChatLogFragmentDirections.actionChatLogFragmentToFriendDetailFragment(position,ToID,myName,hisImage,status,ActiveState,email)
+                Navigation.findNavController(it).navigate(action)
+            }
+
         }
     }
     private fun cameraImageViewClick(){
@@ -178,9 +197,9 @@ class ChatLogFragment : Fragment() , ChatLogRVAdapter.RecyclerDetails {
             ActivityResultCallback {
                 selectedPhotoUri = it
                 mainActivityView = (activity as MainActivity)
-                val action = ChatLogFragmentDirections.actionChatLogFragmentToReViewSendImageFragment(ToID,selectedPhotoUri.toString())
-
+                val action = ChatLogFragmentDirections.actionChatLogFragmentToReViewSendImageFragment(ToID,selectedPhotoUri.toString(),position,myName,status,ActiveState,email,token)
                 view?.let { it1 -> Navigation.findNavController(it1).navigate(action) }
+
             }
         )
 
@@ -206,22 +225,13 @@ class ChatLogFragment : Fragment() , ChatLogRVAdapter.RecyclerDetails {
 
         viewModel.message.observe(viewLifecycleOwner, Observer { list ->
 
-            //viewModel.getMessageFirebaseAll(ToID)
             adapter.ChatMessageUpdate(list)
 
             binding.sendmassageBtn.isEnabled = binding.sendmassegeTV.text != null
             binding.recyclerView2.visibility = View.VISIBLE
             binding.recyclerView2.scrollToPosition(chatMessageList.count()-1)
             viewModel.deleteMessage.observe(viewLifecycleOwner, Observer {
-                if (it){
-                   // isDeleted=true
 
-
-
-                }else{
-                    //isDeleted=true
-                    //adapter.ChatMessageUpdate(list)
-                }
             })
 
         })
@@ -248,9 +258,7 @@ class ChatLogFragment : Fragment() , ChatLogRVAdapter.RecyclerDetails {
                 binding.include.username.text = myName
             }
         })
-        viewModel.isSeen.observe(viewLifecycleOwner, Observer {
 
-        })
         viewModel.isTyping.observe(viewLifecycleOwner, Observer {
             viewModel.getIsTyping(ToID)
             viewModel.getIstypingData()
@@ -282,17 +290,22 @@ class ChatLogFragment : Fragment() , ChatLogRVAdapter.RecyclerDetails {
 
         holder.itemView.visibility=View.GONE
         holder.senderTrashMessage.visibility = View.GONE
-       // isDeleted = true
+
 
     }
     override fun showIsSeenSender(holder: ChatLogRVAdapter.SenderViewHolder,chatMessage : ArrayList<ChatMessage>,p: Int) {
-
         viewModel.isSeen.observe(viewLifecycleOwner, Observer {
             if (it){
                 if(chatMessage.isNotEmpty() && chatMessage.size!=0){
-                   // viewModel.checkIsSeenMessage(chatMessage[p].ToID)
-                    //viewModel.checkIsSeenMessage(chatMessage[p].fromID)
-                    //viewModel.getIsSeenStatus()
+                }
+            }
+
+        })
+    }
+    override fun showIsSeenReciever(holder: ChatLogRVAdapter.RecieverViewHolder,chatMessage : ArrayList<ChatMessage>,p: Int) {
+        viewModel.isSeen.observe(viewLifecycleOwner, Observer {
+            if (it){
+                if(chatMessage.isNotEmpty() && chatMessage.size!=0){
                 }
             }
         })

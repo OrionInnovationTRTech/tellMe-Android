@@ -14,6 +14,7 @@ import android.view.ViewGroup
 import androidx.activity.result.ActivityResultCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.FragmentTransaction
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.Navigation
@@ -59,6 +60,9 @@ class SettingsFragment : Fragment() {
     private fun changePhoto(){
         val getImage = registerForActivityResult(ActivityResultContracts.GetContent(),
             ActivityResultCallback {
+                if(it==null){
+                    return@ActivityResultCallback
+                }
                 val bitmap = MediaStore.Images.Media.getBitmap(context?.contentResolver,it)
                 val bitmapDrawable = BitmapDrawable(bitmap)
                 binding.imgProfile.setImageDrawable(bitmapDrawable)

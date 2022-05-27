@@ -3,7 +3,7 @@
     <string name="typing">typing...</string>
     <string name="online">online</string>
     <string name="offline">offline</string>
-    <string name="message_box_empty">Your message box is empty</string>
+    <string name="message_box_empty">Message box is empty</string>
     <string name="username">User Name</string>
     <string name="status">Status</string>
     <string name="enter_message_tv">Enter message</string>
@@ -12,7 +12,7 @@
     <string name="seen">seen</string>
     <string name="message_deleted">message deleted</string>
     <string name="change_picture">Do you want to change your picture?</string>
-    <string name="change_picture_title">change picture</string>
+    <string name="change_picture_title">Change picture</string>
     <string name="password">Password</string>
     <string name="register">Register</string>
     <string name="already_account">Already have an account</string>
@@ -20,11 +20,12 @@
     <string name="back_register">Back to registration</string>
     <string name="chat">Chat</string>
     <string name="Settings">Settings</string>
-    <string name="Search_hint">Enter the friend name</string>
+    <string name="Search_hint">Search...</string>
     <string name="Change_name">Change your name</string>
     <string name="Change_status">Change your status</string>
     <string name="Cancel">Cancel</string>
     <string name="Save">Save</string>
+    <string name="Image">Image</string>
 
 
 

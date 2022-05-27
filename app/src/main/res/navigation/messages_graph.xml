@@ -179,6 +179,10 @@
             android:name="email"
             app:argType="string"
             android:defaultValue="0" />
+        <argument
+            android:name="token"
+            app:argType="string"
+            android:defaultValue="0" />
     </fragment>
     <fragment
         android:id="@+id/reViewSendImageFragment"
@@ -193,6 +197,30 @@
             android:defaultValue="0" />
         <argument
             android:name="imageURL"
+            app:argType="string"
+            android:defaultValue="0" />
+        <argument
+            android:name="position"
+            app:argType="integer"
+            android:defaultValue="0" />
+        <argument
+            android:name="username"
+            app:argType="string"
+            android:defaultValue="0" />
+        <argument
+            android:name="status"
+            app:argType="string"
+            android:defaultValue="0" />
+        <argument
+            android:name="activeState"
+            app:argType="string"
+            android:defaultValue="0" />
+        <argument
+            android:name="email"
+            app:argType="string"
+            android:defaultValue="0" />
+        <argument
+            android:name="token"
             app:argType="string"
             android:defaultValue="0" />
     </fragment>

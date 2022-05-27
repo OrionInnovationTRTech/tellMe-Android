@@ -60,7 +60,7 @@ class NewMessagesFragment : Fragment() {
         }
         return super.onOptionsItemSelected(item)
     }
-    private fun SearchViewOnQuery(){
+    private fun searchViewOnQuery(){
         binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener{
             override fun onQueryTextSubmit(query: String?): Boolean {
               return false
@@ -80,31 +80,22 @@ class NewMessagesFragment : Fragment() {
         viewModel.getUser()
         viewModel.getAllUsers()
         adapter = NewMessagesRVAdapter(newMessagesList)
-        binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener{
-            override fun onQueryTextSubmit(query: String?): Boolean {
-                return false
-            }
-
-            override fun onQueryTextChange(newText: String?): Boolean {
-                adapter.filter.filter(newText)
-                return false
-            }
-
-        })
+        searchViewOnQuery()
         binding.recyclerView4.adapter = adapter
         observeLiveData()
         binding.swipeRefleshLayoutNewMessages.setOnRefreshListener {
             binding.newLoadingBar.visibility = View.VISIBLE
             binding.recyclerView4.visibility = View.GONE
             binding.newInformationTV.visibility = View.GONE
-            viewModel.getUser()
             viewModel.getAllUsers()
+            viewModel.getUser()
             swipeRefleshLayoutNewMessages.isRefreshing=false
         }
     }
     private fun observeLiveData(){
         viewModel.users.observe(viewLifecycleOwner, Observer {
             it?.let {
+                binding.newInformationTV.visibility = View.GONE
                 binding.recyclerView4.visibility = View.VISIBLE
 
                 adapter.UsersListUpdate(it)

@@ -52,8 +52,8 @@ class LatestMessagesRVAdapter (private val chatMessage:ArrayList<ChatMessage> ,p
             holder.itemUserName.text = userList[position].username
             addition.picassoUseIt(userList[position].profileImageURL,holder.itemImage,holder.itemProgressBar)
         }
-        if (!chatMessage[position].isSeen){
-            holder.itemView.findViewById<ConstraintLayout>(R.id.latest_message_constraint_layout).setBackgroundResource(R.drawable.layout_bg)
+        if (chatMessage[position].isSeen){
+            holder.itemView.findViewById<ConstraintLayout>(R.id.latest_message_constraint_layout).setBackgroundResource(R.drawable.layout_bg_unread_message)
         }
         else{
             holder.itemView.findViewById<ConstraintLayout>(R.id.latest_message_constraint_layout).setBackgroundResource(R.drawable.layout_bg)
@@ -67,7 +67,7 @@ class LatestMessagesRVAdapter (private val chatMessage:ArrayList<ChatMessage> ,p
         if (chatMessage[position].type=="TEXT"){
             holder.itemLastestMessage.text = chatMessage[position].text
         }else{
-            holder.itemLastestMessage.text = "Picture"
+            holder.itemLastestMessage.setText(R.string.Image)
         }
 
         holder.itemView.setOnClickListener {

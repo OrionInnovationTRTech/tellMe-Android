@@ -23,9 +23,10 @@
             <LinearLayout
                 android:layout_width="399dp"
                 android:layout_height="159dp"
-                android:layout_margin="10dp"
+                android:layout_margin="6dp"
+
                 android:layout_weight=".8"
-                android:background="#FFE6D2"
+                android:background="#FBDCC2"
                 android:orientation="vertical"
                 android:padding="10dp"
                 android:weightSum="1.4">
@@ -62,23 +63,25 @@
                     android:id="@+id/friendUserName_TV"
                     android:layout_width="match_parent"
                     android:layout_height="35dp"
-                    android:textAlignment="center"
+
 
                     android:padding="1dp"
                     android:text="@{userModel.username , default=Nothing}"
+                    android:textAlignment="center"
                     android:textColor="@color/black"
-                    android:textSize="20sp"
+                    android:textSize="22sp"
                     android:textStyle="bold" />
+
                 <TextView
                     android:id="@+id/activeState_TV"
                     android:layout_width="match_parent"
                     android:layout_height="35dp"
-                    android:textAlignment="center"
                     android:padding="2dp"
                     android:text="@{userModel.activeState , default=Nothing}"
+                    android:textAlignment="center"
                     android:textColor="@color/black"
-                    android:textSize="20sp"
-                    android:textStyle="bold" />
+                    android:textSize="16sp"
+                    android:textStyle="italic" />
 
             </LinearLayout>
 
@@ -89,7 +92,6 @@
                 android:layout_weight="2.2"
                 android:orientation="vertical"
                 app:cardBackgroundColor="#FFE6D2">
-
 
 
                 <androidx.cardview.widget.CardView
@@ -139,10 +141,10 @@
                 </androidx.cardview.widget.CardView>
 
                 <androidx.cardview.widget.CardView
+                    android:id="@+id/emailCard"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:cardBackgroundColor="#FBDCC2"
-                    android:id="@+id/emailCard"
                     app:cardCornerRadius="8dp"
                     app:cardUseCompatPadding="true"
                     app:elevation="0dp">
@@ -176,8 +178,6 @@
                             android:textStyle="bold" />
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
-
-
 
 
             </LinearLayout>
