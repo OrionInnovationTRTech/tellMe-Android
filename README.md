@@ -22,21 +22,21 @@ An application that we can instant message.
     - see your friends list while offline
   
 
-#What you will learn
--MVVM pattern
--Firebase authentication
--Firebase storage
--Firebase messaging service
--Activity, Fragment
--Retrofit
--Room(Database, Data Access Object, Entities)
--LiveData
--Interprocess communication (Activity ->Fragment, Fragment ->Activity and A_Fragment->Activity->B_Fragment )
--ViewModel test
--DataBinding
--ViewBinding
--Backend Service
--Coroutines
--[Picasso](https://github.com/square/picasso)
--[zoomage](https://github.com/jsibbold/zoomage)
+# What you will learn
+- MVVM pattern
+- Firebase authentication
+- Firebase storage
+- Firebase messaging service
+- Activity, Fragment
+- Retrofit
+- Room(Database, Data Access Object, Entities)
+- LiveData
+- Interprocess communication (Activity ->Fragment, Fragment ->Activity and A_Fragment->Activity->B_Fragment )
+- ViewModel test
+- DataBinding
+- ViewBinding
+- Backend Service
+- Coroutines
+- [Picasso](https://github.com/square/picasso)
+- [zoomage](https://github.com/jsibbold/zoomage)
 
