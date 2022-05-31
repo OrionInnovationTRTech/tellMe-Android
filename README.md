@@ -20,7 +20,11 @@ An application that we can instant message.
 - Local database
     - see messages while offline
     - see your friends list while offline
-  
+
+Latest Messages|  Chat Screen
+:-------------:|:-------------------------:
+![](orn1.png)  |  ![](orn2.png)
+     
 
 # What you will learn
 - MVVM pattern
