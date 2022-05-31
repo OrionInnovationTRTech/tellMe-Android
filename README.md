@@ -20,10 +20,7 @@ An application that we can instant message.
 - Local database
     - see messages while offline
     - see your friends list while offline
-
-
-![](C:\Users\hamza\Documents\GitHub\tellMe-Android\app\src\main\res\drawable\orn1.png)
-![](C:\Users\hamza\Documents\GitHub\tellMe-Android\app\src\main\res\drawable\orn2.png)
+  
 
 #What you will learn
 -MVVM pattern
