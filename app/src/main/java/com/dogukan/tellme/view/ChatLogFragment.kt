@@ -124,7 +124,11 @@ class ChatLogFragment : Fragment() , ChatLogRVAdapter.RecyclerDetails {
                     val toIDD = ChatLogFragmentArgs.fromBundle(it).toID
                     val imageUrl = ChatLogFragmentArgs.fromBundle(it).imageURL
                     val position = ChatLogFragmentArgs.fromBundle(it).position
-                    val action = ChatLogFragmentDirections.actionChatLogFragmentToLatestMessagesFragment2(position,toIDD,usernamee,imageUrl)
+                    val action = ChatLogFragmentDirections.actionChatLogFragmentToLatestMessagesFragment2(
+                        position,
+                        toIDD,
+                        usernamee,
+                        imageUrl)
                     this.view?.let { it1 -> Navigation.findNavController(it1).navigate(action) }
                 }
 
@@ -185,7 +189,8 @@ class ChatLogFragment : Fragment() , ChatLogRVAdapter.RecyclerDetails {
                 ActiveState = ChatLogFragmentArgs.fromBundle(bundle).activeState
                 email = ChatLogFragmentArgs.fromBundle(bundle).email
                 token = ChatLogFragmentArgs.fromBundle(bundle).token
-                val action = ChatLogFragmentDirections.actionChatLogFragmentToFriendDetailFragment(position,ToID,myName,hisImage,status,ActiveState,email)
+                val action = ChatLogFragmentDirections.actionChatLogFragmentToFriendDetailFragment(
+                    position,ToID,myName,hisImage,status,ActiveState,email)
                 Navigation.findNavController(it).navigate(action)
             }
 
@@ -197,7 +202,8 @@ class ChatLogFragment : Fragment() , ChatLogRVAdapter.RecyclerDetails {
             ActivityResultCallback {
                 selectedPhotoUri = it
                 mainActivityView = (activity as MainActivity)
-                val action = ChatLogFragmentDirections.actionChatLogFragmentToReViewSendImageFragment(ToID,selectedPhotoUri.toString(),position,myName,status,ActiveState,email,token)
+                val action = ChatLogFragmentDirections.actionChatLogFragmentToReViewSendImageFragment(
+                    ToID,selectedPhotoUri.toString(),position,myName,status,ActiveState,email,token)
                 view?.let { it1 -> Navigation.findNavController(it1).navigate(action) }
 
             }

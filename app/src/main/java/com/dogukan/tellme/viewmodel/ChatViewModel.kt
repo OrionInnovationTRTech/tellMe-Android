@@ -62,12 +62,10 @@ class ChatViewModel(application: Application) : BaseViewModel(application), Chat
             if (getAllMessage().value?.isEmpty()==true){
                 getDataSQlite(ToID)
             }
-            Log.d("Tag3","Girdi1")
-
         }
         else{
             //get Firebase
-            Log.d("Tag3","Girdi2")
+
             chatRepository.listenForMessageAll(ToID)
             getAllMessage().value?.let { saveSQLite(it) }
 

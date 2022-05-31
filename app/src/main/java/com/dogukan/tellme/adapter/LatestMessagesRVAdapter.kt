@@ -29,7 +29,8 @@ import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
 
-class LatestMessagesRVAdapter (private val chatMessage:ArrayList<ChatMessage> ,private val userList : ArrayList<Users>) : RecyclerView.Adapter<LatestMessagesRVAdapter.LatestMessagesViewHolder>(){
+class LatestMessagesRVAdapter (private val chatMessage:ArrayList<ChatMessage> ,private val userList : ArrayList<Users>) :
+    RecyclerView.Adapter<LatestMessagesRVAdapter.LatestMessagesViewHolder>(){
 
 
     private var addition = Addition()

@@ -21,13 +21,11 @@ import java.util.*
 class ChatLogRVAdapter(private val chatmessages : ArrayList<ChatMessage> ,private val recyclerDetails: RecyclerDetails) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private var addition = Addition()
     private var appUtil = AppUtil()
-
     companion object{
         var SENDER_VIEW_TYPE = 1
         var RECEIVER_VIEW_TYPE = 2
 
     }
-
     class SenderViewHolder(itemView : View) : RecyclerView.ViewHolder(itemView){
         var senderTrashImage : ImageView = itemView.findViewById(R.id.deleteToImageViewImage)
         var senderTrashMessage : ImageView = itemView.findViewById(R.id.deleteToImageViewMessage)
@@ -50,8 +48,6 @@ class ChatLogRVAdapter(private val chatmessages : ArrayList<ChatMessage> ,privat
         var recieverTimeStampImage = itemView.findViewById<TextView>(R.id.Time_stamp_chat_from_row_image_TV)
         var reciverIsSeen = itemView.findViewById<TextView>(R.id.seenMessage_from_TV)
     }
-
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return if (viewType== SENDER_VIEW_TYPE){
             val view = LayoutInflater.from(parent.context).inflate(R.layout.chat_to_row,parent,false)
@@ -100,9 +96,6 @@ class ChatLogRVAdapter(private val chatmessages : ArrayList<ChatMessage> ,privat
 
 
                     }
-
-
-
                 }
                 //message type image
                 else{
@@ -144,8 +137,6 @@ class ChatLogRVAdapter(private val chatmessages : ArrayList<ChatMessage> ,privat
             else{
                 holder.senderIsSeen.visibility = View.GONE
             }
-
-
         }
         //Reciever
         else {
@@ -171,8 +162,6 @@ class ChatLogRVAdapter(private val chatmessages : ArrayList<ChatMessage> ,privat
                     holder.recievermessage.setText(R.string.message_deleted)
 
                 }
-
-
             }
             //Message type image
             else{
