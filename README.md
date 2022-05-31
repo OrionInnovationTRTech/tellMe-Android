@@ -35,7 +35,7 @@ Latest Messages|  Chat Screen
 - Retrofit
 - Room(Database, Data Access Object, Entities)
 - LiveData
-- Interprocess communication (Activity ->Fragment, Fragment ->Activity and A_Fragment->Activity->B_Fragment )
+- Interprocess communication(Activity ->Fragment, Fragment ->Activity)
 - ViewModel test
 - DataBinding
 - ViewBinding
