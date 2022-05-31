@@ -23,7 +23,7 @@ An application that we can instant message.
 
 Latest Messages|  Chat Screen
 :-------------:|:-------------------------:
-![](orn1.png)  |  ![](orn2.png)
+![](images/orn1.png)  |  ![](images/orn2.png)
      
 
 # What you will learn
